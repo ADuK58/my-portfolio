@@ -41,10 +41,19 @@
             }
         }
     </script>
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <style>
         body {
             background-color: #07080d !important;
             color: #cbd5e1 !important;
+        }
+
+        /* Контент поверх 3D фона */
+        header, main, footer, #project-modal, #details-panel, #privacy-modal {
+            position: relative;
+            z-index: 1;
         }
 
         .hover-target { transition: all 0.3s ease; }
@@ -456,6 +465,184 @@
             </div>
         </div>
     </footer>
+
+    <!-- 3D Neural Network Background Canvas -->
+    <canvas id="neural-bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.55;"></canvas>
+
+    <script>
+    (function() {
+        const canvas = document.getElementById('neural-bg-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera.position.set(0, 0, 120);
+
+        // Параметры сети
+        const NODE_COUNT = 90;
+        const SPREAD = 180;
+        const MAX_CONN_DIST = 55;
+        const COLORS = [0x06b6d4, 0x3b82f6, 0x8b5cf6];
+
+        // Узлы
+        const nodeGeo = new THREE.SphereGeometry(0.7, 8, 8);
+        const nodes = [];
+        const nodeVelocities = [];
+
+        for (let i = 0; i < NODE_COUNT; i++) {
+            const colorHex = COLORS[Math.floor(Math.random() * COLORS.length)];
+            const mat = new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.7 + Math.random() * 0.3 });
+            const mesh = new THREE.Mesh(nodeGeo, mat);
+            mesh.position.set(
+                (Math.random() - 0.5) * SPREAD,
+                (Math.random() - 0.5) * SPREAD,
+                (Math.random() - 0.5) * SPREAD * 0.6
+            );
+            scene.add(mesh);
+            nodes.push(mesh);
+            nodeVelocities.push(new THREE.Vector3(
+                (Math.random() - 0.5) * 0.06,
+                (Math.random() - 0.5) * 0.06,
+                (Math.random() - 0.5) * 0.03
+            ));
+        }
+
+        // Линии соединений
+        const lineMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.18 });
+        let lineGeometry = new THREE.BufferGeometry();
+        let linePositions = [];
+        let lineColors = [];
+        let lineMesh = new THREE.LineSegments(lineGeometry, lineMat);
+        scene.add(lineMesh);
+
+        // Пульсирующие «сигналы» по связям
+        const PULSE_COUNT = 20;
+        const pulseGeo = new THREE.SphereGeometry(1.1, 6, 6);
+        const pulseMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, transparent: true, opacity: 0.9 });
+        const pulses = [];
+        for (let i = 0; i < PULSE_COUNT; i++) {
+            const p = new THREE.Mesh(pulseGeo, pulseMat.clone());
+            p.userData = { progress: Math.random(), fromIdx: 0, toIdx: 1, speed: 0.004 + Math.random() * 0.008 };
+            scene.add(p);
+            pulses.push(p);
+        }
+
+        let activeEdges = [];
+
+        function rebuildLines() {
+            linePositions = [];
+            lineColors = [];
+            activeEdges = [];
+
+            const colorMap = {
+                [0x06b6d4]: [0.024, 0.714, 0.831],
+                [0x3b82f6]: [0.231, 0.510, 0.961],
+                [0x8b5cf6]: [0.545, 0.361, 0.965],
+            };
+
+            for (let i = 0; i < NODE_COUNT; i++) {
+                for (let j = i + 1; j < NODE_COUNT; j++) {
+                    const dist = nodes[i].position.distanceTo(nodes[j].position);
+                    if (dist < MAX_CONN_DIST) {
+                        const p1 = nodes[i].position;
+                        const p2 = nodes[j].position;
+                        linePositions.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+                        const c = colorMap[COLORS[Math.floor(Math.random() * COLORS.length)]];
+                        lineColors.push(...c, ...c);
+                        activeEdges.push([i, j]);
+                    }
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+            lineGeometry.setAttribute('color', new THREE.Float32BufferAttribute(lineColors, 3));
+            lineGeometry.attributes.position.needsUpdate = true;
+            lineGeometry.attributes.color.needsUpdate = true;
+
+            // Переназначить пульсы на реальные рёбра
+            pulses.forEach(p => {
+                if (activeEdges.length > 0) {
+                    const e = activeEdges[Math.floor(Math.random() * activeEdges.length)];
+                    p.userData.fromIdx = e[0];
+                    p.userData.toIdx = e[1];
+                    p.userData.progress = Math.random();
+                    // Цвет пульса — в зависимости от цвета целевого узла
+                    const targetColor = nodes[e[1]].material.color;
+                    p.material.color.copy(targetColor);
+                }
+            });
+        }
+
+        // Вращение всей сцены
+        let groupRotY = 0;
+        let groupRotX = 0;
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', e => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        let frameCount = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            frameCount++;
+
+            // Движение узлов
+            nodes.forEach((node, i) => {
+                node.position.add(nodeVelocities[i]);
+                if (Math.abs(node.position.x) > SPREAD / 2) nodeVelocities[i].x *= -1;
+                if (Math.abs(node.position.y) > SPREAD / 2) nodeVelocities[i].y *= -1;
+                if (Math.abs(node.position.z) > SPREAD * 0.3) nodeVelocities[i].z *= -1;
+            });
+
+            // Пересчёт линий каждые 6 кадров
+            if (frameCount % 6 === 0) {
+                rebuildLines();
+            }
+
+            // Пульсы
+            pulses.forEach(p => {
+                p.userData.progress += p.userData.speed;
+                if (p.userData.progress >= 1) {
+                    p.userData.progress = 0;
+                    if (activeEdges.length > 0) {
+                        const e = activeEdges[Math.floor(Math.random() * activeEdges.length)];
+                        p.userData.fromIdx = e[0];
+                        p.userData.toIdx = e[1];
+                        const targetColor = nodes[e[1]].material.color;
+                        p.material.color.copy(targetColor);
+                    }
+                }
+                const from = nodes[p.userData.fromIdx].position;
+                const to = nodes[p.userData.toIdx].position;
+                p.position.lerpVectors(from, to, p.userData.progress);
+                // Пульсация размера
+                const scale = 0.8 + 0.5 * Math.sin(p.userData.progress * Math.PI);
+                p.scale.setScalar(scale);
+            });
+
+            // Медленный дрейф камеры по мыши
+            groupRotY += (mouseX * 0.012 - groupRotY) * 0.03;
+            groupRotX += (-mouseY * 0.008 - groupRotX) * 0.03;
+            scene.rotation.y = groupRotY;
+            scene.rotation.x = groupRotX;
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        rebuildLines();
+        animate();
+    })();
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
