@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Lab | Системы Искусственного Интеллекта и Автоматизация</title>
-    <!-- Подключение Tailwind CSS -->
+    <title>Neural Lab | Artificial Intelligence Systems & Automation</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Подключение шрифтов Google Fonts (Inter и Syne) -->
+    <!-- Google Fonts (Inter & Syne) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-    <!-- Подключение иконок FontAwesome -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        // Конфигурация темы Tailwind для ИИ-лаборатории (неоновые акценты, глубокие темные тона)
+        // Конфигурация цветовой палитры и шрифтов в стиле высокотехнологичного киберпанка
         if (typeof tailwind !== 'undefined') {
             tailwind.config = {
                 theme: {
@@ -42,7 +42,6 @@
         }
     </script>
     <style>
-        /* Базовые стили для предотвращения мерцания при загрузке CDN */
         body {
             background-color: #07080d !important;
             color: #cbd5e1 !important;
@@ -54,20 +53,26 @@
             box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.25);
         }
         
-        /* Анимация появления модальных окон */
+        /* Анимации модальных окон */
         .modal-animate-in { animation: modalIn 0.3s ease forwards; }
         @keyframes modalIn { 
             from { opacity: 0; transform: translateY(10px) scale(0.98); } 
             to { opacity: 1; transform: translateY(0) scale(1); } 
         }
 
-        /* Кастомный скроллбар в стиле хай-тек */
+        /* Плавные переходы страниц */
+        .page-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Кастомный футуристичный скроллбар */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #07080d; }
         ::-webkit-scrollbar-thumb { background: #171b2b; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
 
-        /* Стиль для активных опций в ИИ-квизе */
         .quiz-option.active { 
             border-color: #06b6d4; 
             background-color: rgba(6, 182, 212, 0.08); 
@@ -76,112 +81,175 @@
         }
     </style>
 </head>
-<body class="bg-dark-900 text-slate-300 font-sans antialiased overflow-x-hidden">
+<body class="bg-dark-900 text-slate-300 font-sans antialiased overflow-x-hidden min-h-screen flex flex-col justify-between">
 
-    <!-- Интерактивное модальное окно: Квиз по подбору ИИ-решения -->
+    <!-- Global Interactive Quiz Modal (Теперь выводит сгенерированный конфиг без полей ввода) -->
     <div id="project-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div id="modal-overlay" class="absolute inset-0 bg-dark-900/95 backdrop-blur-sm"></div>
         <div class="relative bg-dark-800 border border-dark-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl modal-animate-in z-10">
             <div class="flex justify-between items-center border-b border-dark-700 pb-4 mb-6">
-                <h3 class="text-xl font-syne font-bold text-white tracking-wide">Запустить ИИ-Проект</h3>
+                <h3 class="text-xl font-syne font-bold text-white tracking-wide">Generate AI Spec</h3>
                 <button id="close-modal" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700 transition-colors">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="space-y-4">
-                <p class="text-slate-400 text-sm">Выберите направление, которое вас интересует:</p>
+            
+            <!-- Шаг 1: Выбор параметров -->
+            <div id="quiz-step-1" class="space-y-4">
+                <p class="text-slate-400 text-sm">Select target core architecture model:</p>
                 <div class="grid grid-cols-2 gap-4">
-                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-cyan group transition-all">
+                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-cyan group transition-all" data-spec="LLM-FT">
                         <i class="fa-solid fa-brain text-brand-cyan group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">Обучение LLM</span>
+                        <span class="block text-sm font-semibold text-white">LLM Fine-Tuning</span>
                     </button>
-                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-blue group transition-all">
+                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-blue group transition-all" data-spec="AGENT-NET">
                         <i class="fa-solid fa-robot text-brand-blue group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">ИИ-Агенты</span>
+                        <span class="block text-sm font-semibold text-white">AI Agents</span>
                     </button>
-                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-violet group transition-all">
+                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-violet group transition-all" data-spec="VISION-CORE">
                         <i class="fa-solid fa-eye text-brand-violet group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">Компьютерное зрение</span>
+                        <span class="block text-sm font-semibold text-white">Computer Vision</span>
                     </button>
-                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-slate-500 group transition-all">
+                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-slate-500 group transition-all" data-spec="PRED-ANALYTICS">
                         <i class="fa-solid fa-chart-line text-slate-500 group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">Предиктивная аналитика</span>
+                        <span class="block text-sm font-semibold text-white">Predictive Analytics</span>
+                    </button>
+                </div>
+                <div class="flex justify-end pt-6 mt-6 border-t border-dark-700">
+                    <button id="modal-next" disabled class="px-6 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-brand-cyan/20">
+                        Compile Spec <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
                     </button>
                 </div>
             </div>
-            <div class="flex justify-end pt-6 mt-6 border-t border-dark-700">
-                <button id="modal-next" disabled class="px-6 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-brand-cyan/20">
-                    Далее <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
-                </button>
+
+            <!-- Шаг 2: Результат генерации конфига (без сбора данных!) -->
+            <div id="quiz-step-2" class="space-y-6 hidden">
+                <div class="text-center space-y-2">
+                    <div class="w-12 h-12 bg-green-500/10 text-green-500 border border-green-500/30 rounded-full flex items-center justify-center mx-auto text-xl animate-pulse">
+                        <i class="fa-solid fa-circle-nodes"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white">Specification Compiled</h4>
+                    <p class="text-slate-400 text-xs">A cryptographic token containing your target specifications has been compiled successfully.</p>
+                </div>
+
+                <div class="bg-dark-900 border border-dark-700 rounded-lg p-4 font-mono text-[11px] text-brand-cyan relative">
+                    <button id="copy-spec-btn" class="absolute top-2 right-2 text-slate-500 hover:text-white px-2 py-1 rounded bg-dark-800 border border-dark-700 text-[10px] transition-all">
+                        <i class="fa-solid fa-copy mr-1"></i>Copy Hash
+                    </button>
+                    <span id="generated-hash-content">GENERATING_HASH...</span>
+                </div>
+
+                <p class="text-slate-400 text-xs leading-relaxed text-center">
+                    To reserve training nodes, please email this compiled hash payload directly to our research communications department at <strong class="text-white">inquiries@neurallab-ai.io</strong>.
+                </p>
+
+                <div class="flex justify-end pt-4 border-t border-dark-700">
+                    <button id="close-modal-success" class="px-6 py-2 bg-dark-700 hover:bg-dark-600 text-white text-xs font-semibold rounded-lg transition-colors">
+                        Close Terminal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Боковая интерактивная панель: Детализация услуг -->
+    <!-- Global Interactive Sidebar Drawer -->
     <div id="details-panel" class="fixed inset-y-0 right-0 z-[100] w-full max-w-md bg-dark-800 border-l border-dark-700 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out p-6 flex flex-col justify-between">
         <div>
             <div class="flex justify-between items-center border-b border-dark-700 pb-4 mb-6">
-                <h3 id="panel-title" class="text-lg font-syne font-bold text-white">Детали технологии</h3>
+                <h3 id="panel-title" class="text-lg font-syne font-bold text-white">Technology Details</h3>
                 <button id="close-panel" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700 transition-colors">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <div id="panel-content" class="text-slate-400 space-y-4">
-                <!-- Контент динамически внедряется через JS -->
+                <!-- Injected via JS -->
             </div>
         </div>
-        <button class="open-inquiry-btn w-full py-3 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg mt-6 shadow-lg shadow-brand-cyan/15 hover:opacity-90 transition-opacity">
-            Начать интеграцию
+        <button id="panel-action-btn" class="w-full py-3 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg mt-6 shadow-lg shadow-brand-cyan/15 hover:opacity-90 transition-opacity">
+            Begin Integration
         </button>
     </div>
 
-    <!-- Шапка сайта (Glassmorphic Header) -->
+    <!-- ABSTRACT PRIVACY POLICY MODAL (Всплывающая безопасная модалка политики) -->
+    <div id="privacy-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
+        <div id="privacy-overlay" class="absolute inset-0 bg-dark-900/95 backdrop-blur-sm"></div>
+        <div class="relative bg-dark-800 border border-dark-700 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl modal-animate-in z-10 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-dark-700 pb-4 mb-6">
+                <h3 class="text-lg font-syne font-bold text-white">Internal Security Policy</h3>
+                <button id="close-privacy" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-4 text-xs text-slate-400 leading-relaxed">
+                <p>
+                    <strong>Neural Lab</strong> operates as an independent decentralized research collective. We apply rigorous architectural security frameworks to preserve user privacy and data integrity.
+                </p>
+                <p>
+                    <strong>Data Minimums:</strong> Since our systems strictly discard form input integrations, our nodes do not store, compile, or process persistent personal datasets. Communication is kept restricted to direct cryptographic client-to-node email transfers.
+                </p>
+                <p>
+                    <strong>Network Logging:</strong> Standard cryptographic key exchanges, handshake timestamps, and general analytical logs are temporarily recorded solely to prevent malicious access, DDoS events, and to audit infrastructure latency.
+                </p>
+                <p>
+                    <strong>Retention & Encryption:</strong> All exchange logs remain strongly encrypted within private isolated Docker blocks behind reverse-proxy firewalls. We do not maintain long-term consumer databases, sell records, or engage with third-party analytical advertising systems.
+                </p>
+                <p>
+                    <strong>Revocation:</strong> Users retain complete control over their session artifacts. To permanently purge log arrays or communication trails, contact us at: <strong>inquiries@neurallab-ai.io</strong>.
+                </p>
+            </div>
+            <div class="flex justify-end pt-6 mt-6 border-t border-dark-700">
+                <button id="close-privacy-btn" class="px-6 py-2 bg-dark-700 hover:bg-dark-600 text-white rounded-lg text-xs font-semibold transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header (Glassmorphic Header) -->
     <header class="sticky top-0 z-50 backdrop-blur-md bg-dark-900/80 border-b border-dark-700/50 transition-all">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center space-x-2 text-2xl font-syne font-extrabold text-white tracking-wider">
+            <a href="#about" class="nav-link flex items-center space-x-2 text-2xl font-syne font-extrabold text-white tracking-wider">
                 <span>NEURAL</span><span class="text-brand-cyan">LAB</span><span class="text-brand-blue">.</span>
             </a>
 
-            <!-- Навигация -->
+            <!-- Navigation tabs -->
             <nav id="desktop-nav" class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#about" class="nav-link text-slate-400 hover:text-white transition-colors">О нас</a>
-                <a href="#services" class="nav-link text-slate-400 hover:text-white transition-colors">Решения</a>
-                <a href="#work" class="nav-link text-slate-400 hover:text-white transition-colors">Кейсы</a>
-                <a href="#process" class="nav-link text-slate-400 hover:text-white transition-colors">Процесс</a>
-                <a href="#contact" class="nav-link text-slate-400 hover:text-white transition-colors">Контакты</a>
+                <a href="#about" class="nav-link text-brand-cyan hover:text-white transition-colors" data-page="about">About</a>
+                <a href="#services" class="nav-link text-slate-400 hover:text-white transition-colors" data-page="services">Solutions</a>
+                <a href="#process" class="nav-link text-slate-400 hover:text-white transition-colors" data-page="process">Process</a>
+                <a href="#contact" class="nav-link text-slate-400 hover:text-white transition-colors" data-page="contact">Contact</a>
             </nav>
 
             <div class="hidden md:block">
                 <button class="open-inquiry-btn px-5 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg text-sm transition-all shadow-lg shadow-brand-cyan/10 transform hover:-translate-y-0.5">
-                    Запустить ИИ
+                    Launch AI
                 </button>
             </div>
 
-            <!-- Кнопка мобильного меню -->
+            <!-- Hamburger icon -->
             <button id="mobile-menu-btn" class="md:hidden text-white p-2 hover:text-brand-cyan transition-colors">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
         </div>
 
-        <!-- Мобильное выпадающее меню -->
+        <!-- Mobile dropdown menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-dark-800 border-b border-dark-700 px-6 py-6 space-y-4">
-            <a href="#about" class="block text-slate-300 hover:text-brand-cyan text-lg">О нас</a>
-            <a href="#services" class="block text-slate-300 hover:text-brand-cyan text-lg">Решения</a>
-            <a href="#work" class="block text-slate-300 hover:text-brand-cyan text-lg">Кейсы</a>
-            <a href="#process" class="block text-slate-300 hover:text-brand-cyan text-lg">Процесс</a>
-            <a href="#contact" class="block text-slate-300 hover:text-brand-cyan text-lg">Контакты</a>
+            <a href="#about" class="mobile-nav-link block text-slate-300 hover:text-brand-cyan text-lg" data-page="about">About</a>
+            <a href="#services" class="mobile-nav-link block text-slate-300 hover:text-brand-cyan text-lg" data-page="services">Solutions</a>
+            <a href="#process" class="mobile-nav-link block text-slate-300 hover:text-brand-cyan text-lg" data-page="process">Process</a>
+            <a href="#contact" class="mobile-nav-link block text-slate-300 hover:text-brand-cyan text-lg" data-page="contact">Contact</a>
             <div class="pt-4 border-t border-dark-700">
                 <button class="open-inquiry-btn w-full text-center py-3 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg">
-                    Запустить ИИ
+                    Launch AI
                 </button>
             </div>
         </div>
     </header>
 
-    <main>
-        <!-- Главный экран (Hero Section) -->
-        <section id="about" class="relative py-24 md:py-36 overflow-hidden">
-            <!-- Фоновые неоновые свечения -->
+    <main class="flex-grow">
+        
+        <!-- PAGE 1: ABOUT (Главная) -->
+        <section id="page-about" class="app-page page-fade-in relative py-12 md:py-24 overflow-hidden">
             <div class="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute bottom-1/4 right-1/10 w-96 h-96 bg-brand-violet/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -192,223 +260,204 @@
                         <span>AI Research & Development</span>
                     </div>
                     <h1 class="text-4xl sm:text-5xl md:text-6xl font-syne font-extrabold text-white leading-tight">
-                        Внедряем решения <br> на базе <span class="bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-violet bg-clip-text text-transparent">нейросетей</span>
+                        Deploying premium <br> <span class="bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-violet bg-clip-text text-transparent">neural systems</span>
                     </h1>
                     <p class="text-slate-400 text-lg max-w-xl">
-                        Создаем кастомные LLM-модели, автономных ИИ-агентов и интеллектуальные алгоритмы компьютерного зрения для оптимизации и автоматизации вашего бизнеса.
+                        We design custom LLM structures, autonomous AI agents, and intelligent computer vision pipelines to scale automation and modernize business performance.
                     </p>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
-                        <button id="hero-showcase-btn" class="px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg text-center transition-all transform hover:-translate-y-0.5 shadow-lg shadow-brand-cyan/20">
-                            Изучить кейсы
-                        </button>
+                        <a href="#services" class="tab-redirect-btn px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg text-center transition-all transform hover:-translate-y-0.5 shadow-lg shadow-brand-cyan/20" data-target="services">
+                            Our Capabilities
+                        </a>
                         <button class="open-inquiry-btn px-8 py-4 bg-dark-800 hover:bg-dark-700 border border-dark-700 text-white font-semibold rounded-lg text-center transition-all">
-                            Подобрать ИИ-решение
+                            Request AI Roadmap
                         </button>
                     </div>
                 </div>
                 
-                <!-- Интерактивный виджет статистики ИИ -->
+                <!-- Cluster status visual -->
                 <div class="lg:col-span-5">
                     <div class="relative w-full max-w-md mx-auto aspect-square rounded-2xl bg-gradient-to-tr from-dark-800 to-dark-700 p-1 border border-dark-600/30 shadow-2xl">
                         <div class="w-full h-full bg-dark-800 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative">
                             <div class="flex justify-between items-center text-xs">
-                                <span class="text-brand-cyan font-bold tracking-widest uppercase">Мониторинг кластера</span>
-                                <span class="text-green-500 flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>Стабилен</span>
+                                <span class="text-brand-cyan font-bold tracking-widest uppercase">Cluster Monitoring</span>
+                                <span class="text-green-500 flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>Stable</span>
                             </div>
                             <div class="text-center space-y-2">
                                 <div class="text-6xl font-syne font-extrabold text-white">99.4%</div>
-                                <p class="text-xs text-slate-400">Точность классификации & генерации моделей</p>
+                                <p class="text-xs text-slate-400">Model Classification & Generation Accuracy</p>
                             </div>
-                            <div class="text-xs text-slate-500 text-center">Все ИИ-контейнеры работают в штатном режиме.</div>
+                            <div class="text-xs text-slate-500 text-center">All AI containers are operating within optimal parameters.</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Направления Услуг (Services) -->
-        <section id="services" class="py-24 bg-dark-800 border-y border-dark-700/40">
+        <!-- PAGE 2: SOLUTIONS -->
+        <section id="page-services" class="app-page page-fade-in relative py-12 md:py-24 hidden">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                    <span class="text-brand-cyan text-sm font-bold tracking-widest uppercase">Направления работы</span>
-                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Наши ИИ-продукты</h2>
+                    <span class="text-brand-cyan text-sm font-bold tracking-widest uppercase">Expertise</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Our AI Capabilities</h2>
+                    <p class="text-slate-400 text-sm">Select any capability below to view deeper structural technologies and vector parameters.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Услуга 1 -->
-                    <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="visual">
+                    <!-- Card 1 -->
+                    <div class="service-card hover-trigger bg-dark-800 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="visual">
                         <div class="space-y-6">
                             <div class="w-12 h-12 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan text-xl"><i class="fa-solid fa-brain"></i></div>
-                            <h3 class="text-xl font-bold text-white">Обучение LLM</h3>
-                            <p class="text-slate-400 text-sm">Тонкая настройка (Fine-Tuning) больших языковых моделей под специфику вашего бизнеса и баз данных.</p>
+                            <h3 class="text-xl font-bold text-white">LLM Fine-Tuning</h3>
+                            <p class="text-slate-400 text-sm">Custom training and configuration of Large Language Models specifically tailored to your proprietary datasets and private workflows.</p>
                         </div>
                         <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-cyan hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
-                            <span>Подробнее</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                            <span>View Details</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </button>
                     </div>
-                    <!-- Услуга 2 -->
-                    <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="engineering">
+                    <!-- Card 2 -->
+                    <div class="service-card hover-trigger bg-dark-800 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="engineering">
                         <div class="space-y-6">
                             <div class="w-12 h-12 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue text-xl"><i class="fa-solid fa-robot"></i></div>
-                            <h3 class="text-xl font-bold text-white">ИИ-Агенты</h3>
-                            <p class="text-slate-400 text-sm">Создание умных ассистентов с долгосрочной памятью, способных автономно выполнять многоэтапные цепочки задач.</p>
+                            <h3 class="text-xl font-bold text-white">AI Agents</h3>
+                            <p class="text-slate-400 text-sm">Building intelligent, persistent virtual agents capable of executing multi-turn complex tasks and API chains autonomously.</p>
                         </div>
                         <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-blue hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
-                            <span>Подробнее</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                            <span>View Details</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </button>
                     </div>
-                    <!-- Услуга 3 -->
-                    <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="security">
+                    <!-- Card 3 -->
+                    <div class="service-card hover-trigger bg-dark-800 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="security">
                         <div class="space-y-6">
                             <div class="w-12 h-12 rounded-lg bg-brand-violet/10 flex items-center justify-center text-brand-violet text-xl"><i class="fa-solid fa-eye"></i></div>
-                            <h3 class="text-xl font-bold text-white">Компьютерное зрение</h3>
-                            <p class="text-slate-400 text-sm">Системы распознавания объектов, трекинга людей, контроля качества на производстве и умной аналитики видеопотока.</p>
+                            <h3 class="text-xl font-bold text-white">Computer Vision</h3>
+                            <p class="text-slate-400 text-sm">High-performance custom vision models for real-time object tracking, segmentation, and advanced quality assurance checks.</p>
                         </div>
                         <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-violet hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
-                            <span>Подробнее</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                            <span>View Details</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Кейсы / Проекты (Works) -->
-        <section id="work" class="py-24">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
-                    <div class="space-y-4">
-                        <span class="text-brand-blue text-sm font-bold tracking-widest uppercase">Портфолио</span>
-                        <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Реализованные проекты</h2>
-                    </div>
-                    <div class="flex items-center space-x-2 bg-dark-800 border border-dark-700 p-1.5 rounded-lg text-xs font-medium">
-                        <button class="portfolio-filter px-4 py-1.5 rounded bg-dark-700 text-white" data-filter="all">Все</button>
-                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="llm">Языковые модели</button>
-                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="vision">Компьютерное зрение</button>
-                    </div>
-                </div>
-                <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Проект 1 -->
-                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="llm">
-                        <div class="aspect-video bg-gradient-to-br from-cyan-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
-                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all flex flex-col justify-between p-4">
-                                <div class="h-2 bg-brand-cyan/20 rounded w-1/3"></div>
-                                <div class="space-y-2">
-                                    <div class="h-2 bg-slate-700 rounded w-5/6"></div>
-                                    <div class="h-2 bg-slate-700 rounded w-1/2"></div>
-                                </div>
-                                <div class="h-5 bg-brand-cyan/10 border border-brand-cyan/30 rounded w-1/4"></div>
-                            </div>
-                        </div>
-                        <div class="p-6 flex justify-between items-center">
-                            <div>
-                                <span class="text-xs text-brand-cyan font-semibold uppercase tracking-wider">LLM & RAG</span>
-                                <h3 class="text-lg font-bold text-white mt-1">ДокАналитик AI</h3>
-                            </div>
-                            <button class="text-slate-500 hover:text-brand-cyan"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
-                        </div>
-                    </div>
-                    <!-- Проект 2 -->
-                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="vision">
-                        <div class="aspect-video bg-gradient-to-br from-violet-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
-                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all flex flex-col justify-between p-4">
-                                <div class="flex justify-between items-center">
-                                    <div class="h-2 bg-brand-violet/20 rounded w-1/4"></div>
-                                    <div class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
-                                </div>
-                                <div class="border border-brand-violet/40 rounded h-12 w-full flex items-center justify-center"><i class="fa-solid fa-qrcode text-brand-violet"></i></div>
-                                <div class="h-2 bg-slate-700 rounded w-1/2"></div>
-                            </div>
-                        </div>
-                        <div class="p-6 flex justify-between items-center">
-                            <div>
-                                <span class="text-xs text-brand-violet font-semibold uppercase tracking-wider">Computer Vision</span>
-                                <h3 class="text-lg font-bold text-white mt-1">НейроКонтроль Потока</h3>
-                            </div>
-                            <button class="text-slate-500 hover:text-brand-violet"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Процесс Внедрения (Process) -->
-        <section id="process" class="py-24 bg-dark-800 border-t border-dark-700/40">
+        <!-- PAGE 3: PROCESS -->
+        <section id="page-process" class="app-page page-fade-in relative py-12 md:py-24 hidden">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                    <span class="text-brand-violet text-sm font-bold tracking-widest uppercase">Методология R&D</span>
-                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Этапы интеграции ИИ</h2>
+                    <span class="text-brand-violet text-sm font-bold tracking-widest uppercase">R&D Methodology</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Our Engineering Path</h2>
+                    <p class="text-slate-400 text-sm">A structured, reproducible framework designed for seamless operational AI scaling.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div class="space-y-4">
-                        <div class="text-5xl font-syne font-extrabold text-dark-700">01</div>
-                        <h4 class="text-lg font-bold text-white">Анализ бизнес-логики</h4>
-                        <p class="text-slate-400 text-sm">Изучаем ваши процессы и определяем рутинные задачи, которые эффективнее всего делегировать ИИ.</p>
+                    <div class="bg-dark-800 border border-dark-700/50 p-6 rounded-xl space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-brand-cyan">01</div>
+                        <h4 class="text-lg font-bold text-white">Architecture Review</h4>
+                        <p class="text-slate-400 text-sm">We assess your legacy workflow endpoints to pinpoint manual procedures ideal for neural optimization.</p>
                     </div>
-                    <div class="space-y-4">
-                        <div class="text-5xl font-syne font-extrabold text-dark-700">02</div>
-                        <h4 class="text-lg font-bold text-white">Сбор данных и разметка</h4>
-                        <p class="text-slate-400 text-sm">Подготавливаем обучающие выборки, очищаем датасеты и настраиваем конвейеры валидации данных.</p>
+                    <div class="bg-dark-800 border border-dark-700/50 p-6 rounded-xl space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-brand-blue">02</div>
+                        <h4 class="text-lg font-bold text-white">Data Structuring</h4>
+                        <p class="text-slate-400 text-sm">We aggregate, filter, and structure specialized training datasets to eliminate bias and optimize learning.</p>
                     </div>
-                    <div class="space-y-4">
-                        <div class="text-5xl font-syne font-extrabold text-dark-700">03</div>
-                        <h4 class="text-lg font-bold text-white">Обучение и валидация</h4>
-                        <p class="text-slate-400 text-sm">Проводим Fine-Tuning моделей на мощных GPU-кластерах до достижения целевой точности.</p>
+                    <div class="bg-dark-800 border border-dark-700/50 p-6 rounded-xl space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-brand-violet">03</div>
+                        <h4 class="text-lg font-bold text-white">Training Loops</h4>
+                        <p class="text-slate-400 text-sm">We execute targeted training runs across server clusters, evaluating loss curves and validation metrics.</p>
                     </div>
-                    <div class="space-y-4">
-                        <div class="text-5xl font-syne font-extrabold text-dark-700">04</div>
-                        <h4 class="text-lg font-bold text-white">Продакшн и API</h4>
-                        <p class="text-slate-400 text-sm">Упаковываем модель в микросервисы, настраиваем инференс с низкой задержкой и внедряем в вашу систему.</p>
+                    <div class="bg-dark-800 border border-dark-700/50 p-6 rounded-xl space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-brand-cyan">04</div>
+                        <h4 class="text-lg font-bold text-white">API Integration</h4>
+                        <p class="text-slate-400 text-sm">We pack the trained weights into highly efficient containerized endpoints for low-latency live requests.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Контактная Форма (Contact Section) -->
-        <section id="contact" class="py-24">
-            <div class="max-w-3xl mx-auto px-6">
-                <div id="contact-container" class="bg-dark-800 border border-dark-700 p-8 sm:p-12 rounded-2xl shadow-2xl relative transition-all">
-                    <!-- Успешный экран после отправки -->
-                    <div id="contact-success" class="hidden text-center py-10 space-y-6">
-                        <div class="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 flex items-center justify-center text-4xl mx-auto animate-bounce"><i class="fa-solid fa-check"></i></div>
-                        <h3 class="text-2xl font-syne font-bold text-white">Заявка принята!</h3>
-                        <p class="text-slate-400 max-w-md mx-auto">Спасибо за обращение. Наш ИИ-архитектор проанализирует ваш запрос и свяжется с вами в течение рабочего дня.</p>
-                        <button id="reset-contact-btn" class="px-6 py-2 bg-dark-700 text-white rounded-lg text-sm hover:bg-dark-600 transition-colors">Отправить новый запрос</button>
-                    </div>
-                    
-                    <!-- Сама Форма -->
-                    <div id="contact-form-wrapper" class="space-y-8">
-                        <div class="text-center space-y-4">
-                            <h2 class="text-3xl font-syne font-bold text-white">Обсудить ИИ-проект</h2>
-                            <p class="text-slate-400">Оставьте заявку, чтобы получить экспресс-аудит ваших процессов на готовность к внедрению нейросетей.</p>
-                        </div>
-                        <form id="portfolio-contact-form" class="space-y-6">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Ваше имя</label><input type="text" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-cyan text-sm" placeholder="Константин"></div>
-                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Рабочий Email</label><input type="email" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-cyan text-sm" placeholder="ceo@neural-lab.ru"></div>
+        <!-- PAGE 4: CONTACT (Заменили форму на безопасный статический блок контактов) -->
+        <section id="page-contact" class="app-page page-fade-in relative py-12 md:py-24 hidden">
+            <div class="max-w-4xl mx-auto px-6">
+                <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                    <span class="text-brand-cyan text-sm font-bold tracking-widest uppercase">Contact Us</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Get in Touch</h2>
+                    <p class="text-slate-400 text-sm">We are always open to discuss custom AI integrations, LLM modeling, and systems automation.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Secure Communications Card -->
+                    <div class="bg-dark-800 border border-dark-700 p-8 rounded-2xl flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan text-xl">
+                                <i class="fa-solid fa-envelope-open-text"></i>
                             </div>
-                            <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Описание задачи</label><textarea rows="4" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-cyan text-sm" placeholder="Опишите, какую рутину вы бы хотели автоматизировать с помощью ИИ..."></textarea></div>
-                            <button id="submit-btn" type="submit" class="w-full py-4 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg transition-all flex items-center justify-center space-x-2 group shadow-lg shadow-brand-cyan/15">
-                                <span>Отправить запрос</span><i class="fa-solid fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
+                            <h3 class="text-xl font-syne font-bold text-white">Secure Communications</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                For primary design briefs, cryptographic specs, or general inquiries, please contact our general communication node directly.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-dark-700">
+                            <span class="block text-[10px] uppercase text-slate-500 font-semibold tracking-wider mb-1">Direct Node Email</span>
+                            <a href="mailto:inquiries@neurallab-ai.io" class="text-lg font-mono text-brand-cyan hover:text-brand-blue transition-colors font-bold flex items-center space-x-2">
+                                <span>inquiries@neurallab-ai.io</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Research Facilities Card -->
+                    <div class="bg-dark-800 border border-dark-700 p-8 rounded-2xl flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 rounded-xl bg-brand-violet/10 flex items-center justify-center text-brand-violet text-xl">
+                                <i class="fa-solid fa-building-user"></i>
+                            </div>
+                            <h3 class="text-xl font-syne font-bold text-white">Research Hub Location</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                Our primary physical laboratory is strategically positioned within a high-density, green infrastructure science park.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-dark-700">
+                            <span class="block text-[10px] uppercase text-slate-500 font-semibold tracking-wider mb-1">Physical Address</span>
+                            <p class="text-sm font-semibold text-slate-300">
+                                79 Science Park Drive, Tech Cluster Suite 412, Singapore 118256
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Encryption / Cryptographic Identity Info (Full Width) -->
+                    <div class="md:col-span-2 bg-gradient-to-tr from-dark-800 to-dark-700 border border-dark-700 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-lock text-brand-cyan animate-pulse"></i>
+                                Cryptographic Integrity & PGP
+                            </h4>
+                            <p class="text-slate-400 text-xs max-w-xl leading-relaxed">
+                                We utilize private-key cryptographic tunnels for our secure operations. You may request our official public PGP key by emailing our communications node with your initial verification handshake.
+                            </p>
+                        </div>
+                        <div class="w-full md:w-auto flex-shrink-0">
+                            <button id="show-privacy-policy" class="w-full md:w-auto px-6 py-3 bg-dark-900 hover:bg-dark-600 border border-dark-700 text-slate-300 font-semibold rounded-lg text-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                View Security Policy
                             </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
-    <!-- Подвал (Footer) -->
-    <footer class="bg-dark-900 border-t border-dark-700/50 py-12">
+    <!-- Footer -->
+    <footer class="bg-dark-900 border-t border-dark-700/50 py-12 mt-auto">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex items-center space-x-2 text-xl font-syne font-extrabold text-white tracking-wider"><span>NEURAL</span><span class="text-brand-cyan">LAB</span><span class="text-brand-blue">.</span></div>
-            <p class="text-xs text-slate-500">&copy; 2026 Лаборатория Нейротехнологий Neural Lab. Все права защищены.</p>
+            <p class="text-xs text-slate-500">&copy; 2026 Neural Lab Research. All rights reserved.</p>
             <div class="flex items-center space-x-2 text-xs text-green-500 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span><span>Ядро ИИ Активно</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span><span>AI Nodes Operational</span>
             </div>
         </div>
     </footer>
 
     <script>
-        // Инициализация скриптов после полной загрузки документа
         document.addEventListener('DOMContentLoaded', () => {
             const body = document.body;
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -417,19 +466,104 @@
             const detailsPanel = document.getElementById('details-panel');
             const panelTitle = document.getElementById('panel-title');
             const panelContent = document.getElementById('panel-content');
-            const contactForm = document.getElementById('portfolio-contact-form');
-            const contactWrapper = document.getElementById('contact-form-wrapper');
-            const contactSuccess = document.getElementById('contact-success');
+            const panelActionBtn = document.getElementById('panel-action-btn');
 
-            // Безопасное закрытие всех оверлеев
+            // Модальное окно политики безопасности
+            const privacyModal = document.getElementById('privacy-modal');
+            const privacyOverlay = document.getElementById('privacy-overlay');
+            const closePrivacyBtn = document.getElementById('close-privacy');
+            const closePrivacyAcknowledge = document.getElementById('close-privacy-btn');
+            const showPrivacyPolicyBtn = document.getElementById('show-privacy-policy');
+
+            // --- SPA Маршрутизация ---
+            const pages = ['about', 'services', 'process', 'contact'];
+
+            function navigateToPage(pageId) {
+                if (!pages.includes(pageId)) pageId = 'about';
+
+                document.querySelectorAll('.app-page').forEach(page => {
+                    page.classList.add('hidden');
+                });
+
+                const targetPage = document.getElementById(`page-${pageId}`);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                }
+
+                document.querySelectorAll('#desktop-nav .nav-link').forEach(link => {
+                    const linkPage = link.getAttribute('data-page');
+                    if (linkPage === pageId) {
+                        link.classList.remove('text-slate-400');
+                        link.classList.add('text-brand-cyan');
+                    } else {
+                        link.classList.remove('text-brand-cyan');
+                        link.classList.add('text-slate-400');
+                    }
+                });
+
+                if (history.pushState) {
+                    history.pushState(null, null, `#${pageId}`);
+                } else {
+                    window.location.hash = pageId;
+                }
+
+                closeOverlays();
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
+
+            // Навигационные обработчики кликов
+            document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('href').substring(1);
+                    navigateToPage(pageId);
+                });
+            });
+
+            document.querySelectorAll('.tab-redirect-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetPage = btn.getAttribute('data-target');
+                    navigateToPage(targetPage);
+                });
+            });
+
+            // Открытие окна политики
+            if (showPrivacyPolicyBtn && privacyModal) {
+                showPrivacyPolicyBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    closeOverlays();
+                    privacyModal.classList.remove('hidden');
+                    body.classList.add('overflow-hidden');
+                });
+            }
+
+            function closePrivacyModal() {
+                if (privacyModal) privacyModal.classList.add('hidden');
+                body.classList.remove('overflow-hidden');
+            }
+
+            if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', closePrivacyModal);
+            if (privacyOverlay) privacyOverlay.addEventListener('click', closePrivacyModal);
+            if (closePrivacyAcknowledge) closePrivacyAcknowledge.addEventListener('click', closePrivacyModal);
+
+            const initialHash = window.location.hash.substring(1);
+            navigateToPage(initialHash || 'about');
+
+            window.addEventListener('hashchange', () => {
+                const currentHash = window.location.hash.substring(1);
+                navigateToPage(currentHash || 'about');
+            });
+
+            // --- Вспомогательные оверлеи и оверлеи UI ---
             function closeOverlays() {
                 if (mobileMenu) mobileMenu.classList.add('hidden');
                 if (inquiryModal) inquiryModal.classList.add('hidden');
                 if (detailsPanel) detailsPanel.classList.add('translate-x-full');
+                if (privacyModal) privacyModal.classList.add('hidden');
                 if (body) body.classList.remove('overflow-hidden');
             }
 
-            // Мобильная шторка меню
             if (mobileMenuBtn && mobileMenu) {
                 mobileMenuBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -437,54 +571,95 @@
                 });
             }
 
-            // Логика работы квиза старта проекта (модалка)
+            // --- Интерактивная логика квиза-генератора (Launch AI) ---
             const openModalBtns = document.querySelectorAll('.open-inquiry-btn');
             const closeModalBtn = document.getElementById('close-modal');
             const quizOptions = document.querySelectorAll('.quiz-option');
             const modalNextBtn = document.getElementById('modal-next');
             const modalOverlay = document.getElementById('modal-overlay');
 
+            const quizStep1 = document.getElementById('quiz-step-1');
+            const quizStep2 = document.getElementById('quiz-step-2');
+            const generatedHashContent = document.getElementById('generated-hash-content');
+            const copySpecBtn = document.getElementById('copy-spec-btn');
+            const closeModalSuccessBtn = document.getElementById('close-modal-success');
+
+            let selectedSpecCode = '';
+
             openModalBtns.forEach(btn => btn.addEventListener('click', () => {
                 closeOverlays();
+                if (quizStep1) quizStep1.classList.remove('hidden');
+                if (quizStep2) quizStep2.classList.add('hidden');
+                if (modalNextBtn) modalNextBtn.disabled = true;
+                
+                quizOptions.forEach(opt => opt.classList.remove('active'));
+                
                 if (inquiryModal) inquiryModal.classList.remove('hidden');
                 if (body) body.classList.add('overflow-hidden');
             }));
 
             if (closeModalBtn) closeModalBtn.addEventListener('click', closeOverlays);
             if (modalOverlay) modalOverlay.addEventListener('click', closeOverlays);
+            if (closeModalSuccessBtn) closeModalSuccessBtn.addEventListener('click', closeOverlays);
 
             quizOptions.forEach(option => option.addEventListener('click', () => {
                 quizOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
+                selectedSpecCode = option.getAttribute('data-spec') || 'LLM-CORE';
                 if (modalNextBtn) modalNextBtn.disabled = false;
             }));
 
             if (modalNextBtn) {
                 modalNextBtn.addEventListener('click', () => {
-                    closeOverlays();
-                    if (contactWrapper) contactWrapper.classList.add('hidden');
-                    if (contactSuccess) contactSuccess.classList.remove('hidden');
-                    const contactSection = document.querySelector('#contact');
-                    if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+                    // Генерация фейкового токена спецификации без сбора реальных данных
+                    const randomHex = Array.from({length: 4}, () => Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');
+                    const randomHex2 = Array.from({length: 4}, () => Math.floor(Math.random()*16).toString(16).toUpperCase()).join('');
+                    const finalHash = `NLAB-${selectedSpecCode}-${randomHex}-${randomHex2}-SSL_SEC`;
+                    
+                    if (generatedHashContent) {
+                        generatedHashContent.textContent = finalHash;
+                    }
+
+                    if (quizStep1) quizStep1.classList.add('hidden');
+                    if (quizStep2) quizStep2.classList.remove('hidden');
                 });
             }
 
-            // Детализация услуг (Sidebar Drawer)
+            // Копирование сгенерированного хэша
+            if (copySpecBtn) {
+                copySpecBtn.addEventListener('click', () => {
+                    const textToCopy = generatedHashContent ? generatedHashContent.textContent : '';
+                    const el = document.createElement('textarea');
+                    el.value = textToCopy;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+
+                    const originalText = copySpecBtn.innerHTML;
+                    copySpecBtn.innerHTML = `<i class="fa-solid fa-check text-green-500 mr-1"></i>Copied!`;
+                    setTimeout(() => {
+                        copySpecBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+            }
+
+            // Боковая панель деталей услуг (Sidebar)
             const learnMoreBtns = document.querySelectorAll('.learn-more-btn');
             const closePanelBtn = document.getElementById('close-panel');
 
             const serviceDetails = {
                 visual: { 
-                    title: 'Интеграция Языковых Моделей', 
-                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Тонкая настройка (Fine-Tuning) LLaMA-3, Mistral, Qwen</li><li>Разработка RAG-систем (поиск по базам документов)</li><li>Оптимизация инференса моделей под малый VRAM</li><li>Локальное развертывание (On-Premise) без доступа к OpenAI</li><li>Интеграция векторных баз данных (Chroma, Qdrant)</li></ul>' 
+                    title: 'LLM Fine-Tuning & Integration', 
+                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Custom adjustments (Fine-Tuning) for LLaMA, Mistral, and Qwen systems</li><li>Robust RAG (Retrieval-Augmented Generation) indexing</li><li>Inference parameter optimization designed for limited hardware</li><li>On-premise deployments containing zero external API dependency</li><li>Vector database structuring using Qdrant or ChromaDB</li></ul>' 
                 },
                 engineering: { 
-                    title: 'Автономные ИИ-Агенты', 
-                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Проектирование мультиагентных систем на LangGraph</li><li>Интеграция с корпоративными API, CRM и ERP системами</li><li>Внедрение планировщиков задач и баз краткосрочной памяти</li><li>Обучение агентов работе в терминале и анализу файлов</li><li>Мониторинг поведения агентов в реальном времени</li></ul>' 
+                    title: 'Autonomous Multi-Agent Networks', 
+                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Stateful flow design utilising LangGraph engines</li><li>Bi-directional API endpoints for legacy ERP & CRM loops</li><li>Short-term and long-term persistent agent memory systems</li><li>File analysis, report generations, and database operations</li><li>Live status telemetry for multi-turn agent processes</li></ul>' 
                 },
                 security: { 
-                    title: 'Компьютерное Зрение (Computer Vision)', 
-                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Кастомные модели детекции на базе YOLOv8</li><li>Распознавание лиц и трекинг объектов на видеопотоке</li><li>Интеграция с существующими RTSP-камерами</li><li>Автоматизированный контроль качества продукции</li><li>Разметка данных с ИИ-ускорением</li></ul>' 
+                    title: 'High-Performance Vision Systems', 
+                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Custom YOLOv8 models trained for industrial specifications</li><li>Real-time multi-object tracking and facial recognitions</li><li>Direct RTSP security feed integrations and data logging</li><li>AI-driven automated hardware defect detections</li><li>Automated frame pre-labelling using zero-shot segmentations</li></ul>' 
                 }
             };
 
@@ -504,69 +679,13 @@
 
             if (closePanelBtn) closePanelBtn.addEventListener('click', closeOverlays);
 
-            // Фильтрация кейсов в портфолио
-            const heroShowcaseBtn = document.getElementById('hero-showcase-btn');
-            const filterBtns = document.querySelectorAll('.portfolio-filter');
-            const projectItems = document.querySelectorAll('.project-item');
-
-            filterBtns.forEach(btn => btn.addEventListener('click', () => {
-                const filterValue = btn.dataset.filter;
-                filterBtns.forEach(b => b.classList.remove('bg-dark-700', 'text-white'));
-                btn.classList.add('bg-dark-700', 'text-white');
-                btn.classList.remove('text-slate-400');
-
-                projectItems.forEach(item => {
-                    const categories = item.dataset.category ? item.dataset.category.split(' ') : [];
-                    if (filterValue === 'all' || categories.includes(filterValue)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            }));
-
-            if (heroShowcaseBtn) {
-                heroShowcaseBtn.addEventListener('click', () => {
-                    const workSection = document.querySelector('#work');
-                    if (workSection) workSection.scrollIntoView({ behavior: 'smooth' });
-                    const defaultFilter = document.querySelector('[data-filter="llm"]');
-                    if (defaultFilter) {
-                        setTimeout(() => defaultFilter.click(), 400);
-                    }
+            if (panelActionBtn) {
+                panelActionBtn.addEventListener('click', () => {
+                    closeOverlays();
+                    navigateToPage('contact');
                 });
             }
 
-            // Обработка отправки формы заявки
-            const submitBtn = document.getElementById('submit-btn');
-            if (contactForm) {
-                contactForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Обработка ИИ...</span>`;
-                    }
-                    
-                    setTimeout(() => {
-                        if (contactWrapper) contactWrapper.classList.add('hidden');
-                        if (contactSuccess) contactSuccess.classList.remove('hidden');
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = `<span>Отправить запрос</span><i class="fa-solid fa-paper-plane text-sm"></i>`;
-                        }
-                        contactForm.reset();
-                    }, 1500);
-                });
-            }
-
-            const resetContactBtn = document.getElementById('reset-contact-btn');
-            if (resetContactBtn) {
-                resetContactBtn.addEventListener('click', () => {
-                    if (contactSuccess) contactSuccess.classList.add('hidden');
-                    if (contactWrapper) contactWrapper.classList.remove('hidden');
-                });
-            }
-
-            // Закрытие оверлеев по кнопке Escape
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') closeOverlays();
             });
