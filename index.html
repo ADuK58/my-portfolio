@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Studio | Premium Digital Interfaces & Development</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        syne: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0b0c10',
+                            800: '#12141c',
+                            700: '#1e2230',
+                            600: '#2a2f42'
+                        },
+                        brand: {
+                            blue: '#38bdf8',
+                            indigo: '#6366f1',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth transitions for interactive elements */
+        .hover-target { transition: all 0.3s ease; }
+        .hover-trigger:hover .hover-target {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(56, 189, 248, 0.15);
+        }
+        
+        /* Modal & Panel animations */
+        .modal-animate-in { animation: modalIn 0.4s ease forwards; }
+        .modal-animate-out { animation: modalOut 0.3s ease forwards; }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes modalOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(20px) scale(0.95); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0c10; }
+        ::-webkit-scrollbar-thumb { background: #1e2230; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+        /* Interactive Quiz Styles */
+        .quiz-option.active { border-color: #38bdf8; background-color: rgba(56, 189, 248, 0.1); color: white; }
+    </style>
+</head>
+<body class="bg-dark-900 text-slate-300 font-sans antialiased overflow-x-hidden">
+
+    <!-- Project Inquiry Modal (Quiz) -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div id="modal-overlay" class="fixed inset-0 transition-opacity bg-dark-900/90 backdrop-blur-sm" aria-hidden="true"></div>
+            <!-- Modal panel -->
+            <div id="modal-panel" class="inline-block transition-all transform bg-dark-800 border border-dark-700 rounded-2xl text-left shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-animate-in">
+                <div class="px-6 pt-6 pb-4 flex justify-between items-center border-b border-dark-700">
+                    <h3 class="text-xl font-syne font-bold text-white">Start Your Project</h3>
+                    <button id="close-modal" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <div class="px-8 py-8 space-y-6">
+                    <p class="text-slate-400 text-sm">Select the core service you are interested in:</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-blue group transition-all">
+                            <i class="fa-solid fa-wand-magic-sparkles text-brand-blue group-hover:scale-110 transition-transform"></i>
+                            <span class="block text-sm font-semibold text-white">Visual Design</span>
+                        </button>
+                        <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-indigo group transition-all">
+                            <i class="fa-solid fa-code text-brand-indigo group-hover:scale-110 transition-transform"></i>
+                            <span class="block text-sm font-semibold text-white">Engineering</span>
+                        </button>
+                        <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-purple group transition-all">
+                            <i class="fa-solid fa-shield-halved text-brand-purple group-hover:scale-110 transition-transform"></i>
+                            <span class="block text-sm font-semibold text-white">System Security</span>
+                        </button>
+                        <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-slate-500 group transition-all">
+                            <i class="fa-solid fa-layer-group text-slate-500 group-hover:scale-110 transition-transform"></i>
+                            <span class="block text-sm font-semibold text-white">Full Stack</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="px-8 pb-8 flex justify-end">
+                    <button id="modal-next" disabled class="px-6 py-2.5 bg-gradient-to-r from-brand-blue to-brand-indigo text-dark-900 font-bold rounded-lg text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        Next Step <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Side Panel -->
+    <div id="details-panel" class="fixed inset-y-0 right-0 z-[100] w-full max-w-md bg-dark-800 border-l border-dark-700 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+        <div class="px-6 pt-6 pb-4 flex justify-between items-center border-b border-dark-700Sticky Glassmorphic Header -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-dark-900/80 border-b border-dark-700/50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-2 text-2xl font-syne font-extrabold text-white tracking-wider">
+                <span>VISUAL</span><span class="text-brand-blue">STUDIO</span><span class="text-brand-indigo">.</span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav id="desktop-nav" class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#about" class="nav-link text-slate-400 hover:text-white transition-colors duration-200">About</a>
+                <a href="#services" class="nav-link text-slate-400 hover:text-white transition-colors duration-200">Services</a>
+                <a href="#work" class="nav-link text-slate-400 hover:text-white transition-colors duration-200">Work</a>
+                <a href="#process" class="nav-link text-slate-400 hover:text-white transition-colors duration-200">Process</a>
+                <a href="#contact" class="nav-link text-slate-400 hover:text-white transition-colors duration-200">Contact</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="hidden md:block">
+                <button class="open-inquiry-btn px-5 py-2.5 bg-gradient-to-r from-brand-blue to-brand-indigo hover:from-brand-indigo hover:to-brand-purple text-dark-900 font-bold rounded-lg text-sm transition-all duration-300 shadow-lg shadow-brand-blue/10 transform hover:-translate-y-0.5 inline-block">
+                    Start a Project
+                </button>
+            </div>
+
+            <!-- Mobile Hamburger Menu -->
+            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none p-2" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars text-xl hover:text-brand-blue transition-colors"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-800 border-b border-dark-700 px-6 py-6 space-y-4 transition-all duration-300">
+            <a href="#about" class="block text-slate-300 hover:text-brand-blue transition-colors duration-200 text-lg">About</a>
+            <a href="#services" class="block text-slate-300 hover:text-brand-blue transition-colors duration-200 text-lg">Services</a>
+            <a href="#work" class="block text-slate-300 hover:text-brand-blue transition-colors duration-200 text-lg">Our Work</a>
+            <a href="#process" class="block text-slate-300 hover:text-brand-blue transition-colors duration-200 text-lg">Process</a>
+            <a href="#contact" class="block text-slate-300 hover:text-brand-blue transition-colors duration-200 text-lg">Contact</a>
+            <div class="pt-4 border-t border-dark-700">
+                <button class="open-inquiry-btn block w-full text-center py-3 bg-gradient-to-r from-brand-blue to-brand-indigo text-dark-900 font-bold rounded-lg">
+                    Start a Project
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="about" class="relative py-24 md:py-36 overflow-hidden">
+            <div class="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-8">
+                    <div class="inline-flex items-center space-x-2 bg-dark-800 border border-dark-700 px-3 py-1.5 rounded-full text-xs text-brand-blue font-semibold uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+                        <span>Design & Code Agency</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-syne font-extrabold text-white leading-tight">
+                        We build immersive <span class="bg-gradient-to-r from-brand-blue via-brand-indigo to-brand-purple bg-clip-text text-transparent">digital interfaces</span>
+                    </h1>
+                    <p class="text-slate-400 text-lg max-w-xl leading-relaxed">
+                        An award-winning creative studio crafting premium websites, high-fidelity brand identities, and custom digital platforms.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
+                        <button id="hero-showcase-btn" class="px-8 py-4 bg-gradient-to-r from-brand-blue to-brand-indigo hover:from-brand-indigo hover:to-brand-purple text-dark-900 font-bold rounded-lg text-center transition-all duration-300 shadow-xl transform hover:-translate-y-0.5">
+                            Explore Showcase
+                        </button>
+                        <button class="open-inquiry-btn px-8 py-4 bg-dark-800 hover:bg-dark-700 border border-dark-700 text-white font-semibold rounded-lg text-center transition-all duration-300">
+                            Start Your Project
+                        </button>
+                    </div>
+                </div>
+                <!-- Abstract Visual -->
+                <div class="lg:col-span-5 relative mt-12 lg:mt-0">
+                    <div class="relative w-full max-w-md mx-auto aspect-square rounded-2xl bg-gradient-to-tr from-dark-800 to-dark-700 p-1 border border-dark-600/30 shadow-2xl">
+                        <div class="w-full h-full bg-dark-800 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative">
+                            <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                            <div class="flex justify-between items-center z-10 text-xs"><span class="text-brand-blue font-bold tracking-widest uppercase">Visual Engine</span><span class="text-green-500 flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>Active</span></div>
+                            <div class="my-auto z-10 text-center space-y-2"><div class="text-6xl font-syne font-extrabold text-white">4.9/5</div><p class="text-xs text-slate-400">Client Satisfaction Score</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-24 bg-dark-800 border-y border-dark-700/40 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                    <span class="text-brand-blue text-sm font-bold tracking-widest uppercase">Expertise</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Interactive Solutions</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all duration-300 flex flex-col justify-between" data-service="visual">
+                        <div class="space-y-6">
+                            <div class="w-12 h-12 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue text-xl"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <h3 class="text-xl font-bold text-white">Visual Design</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">Intuitive interfaces, specialized aesthetics, branding guidelines, and interactive mockups.</p>
+                        </div>
+                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-blue hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
+                            <span>Learn More</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all duration-300 flex flex-col justify-between" data-service="engineering">
+                        <div class="space-y-6">
+                            <div class="w-12 h-12 rounded-lg bg-brand-indigo/10 flex items-center justify-center text-brand-indigo text-xl"><i class="fa-solid fa-code"></i></div>
+                            <h3 class="text-xl font-bold text-white">Engineering</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">Light, SEO-tuned single-page apps, static landing pages, and robust backend integrations.</p>
+                        </div>
+                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-indigo hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
+                            <span>Learn More</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all duration-300 flex flex-col justify-between" data-service="security">
+                        <div class="space-y-6">
+                            <div class="w-12 h-12 rounded-lg bg-brand-purple/10 flex items-center justify-center text-brand-purple text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+                            <h3 class="text-xl font-bold text-white">Security</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">reverse proxy configs, robust SSL/TLS setups, and secure deployment strategies.</p>
+                        </div>
+                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-purple hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
+                            <span>Learn More</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Works Section -->
+        <section id="work" class="py-24 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+                    <div class="space-y-4"><span class="text-brand-indigo text-sm font-bold tracking-widest uppercase">Portfolio</span><h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Case Studies</h2></div>
+                    <!-- Dynamic Portfolio Filters -->
+                    <div class="flex items-center space-x-2 bg-dark-800 border border-dark-700 p-1.5 rounded-lg text-xs font-medium">
+                        <button class="portfolio-filter px-4 py-1.5 rounded bg-dark-700 text-white" data-filter="all">All</button>
+                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="webapp">Web App</button>
+                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="fintech">Fintech</button>
+                    </div>
+                </div>
+                <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 transition-all duration-500">
+                    <!-- Project 1 -->
+                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="webapp fintech">
+                        <div class="aspect-video bg-gradient-to-br from-indigo-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-dark-900/40 group-hover:bg-dark-900/10 transition-all duration-300"></div>
+                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all duration-300"></div>
+                        </div>
+                        <div class="p-6 flex justify-between items-center"><h3 class="text-lg font-bold text-white">Aether Pay</h3><button class="text-slate-500 hover:text-brand-blue"><i class="fa-solid fa-arrow-up-right-from-square"></i></button></div>
+                    </div>
+                    <!-- Project 2 -->
+                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="webapp">
+                        <div class="aspect-video bg-gradient-to-br from-purple-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-dark-900/40 group-hover:bg-dark-900/10 transition-all duration-300"></div>
+                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all duration-300"></div>
+                        </div>
+                        <div class="p-6 flex justify-between items-center"><h3 class="text-lg font-bold text-white">Solas Ecosystem</h3><button class="text-slate-500 hover:text-brand-purple"><i class="fa-solid fa-arrow-up-right-from-square"></i></button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section id="process" class="py-24 bg-dark-800 border-t border-dark-700/40">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                    <span class="text-brand-purple text-sm font-bold tracking-widest uppercase">The Strategy</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">How We Deploy</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">01</div><h4 class="text-lg font-bold text-white">Consulting</h4><p class="text-slate-400 text-sm">Defining structural scopes and server specifications.</p></div>
+                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">02</div><h4 class="text-lg font-bold text-white">Design</h4><p class="text-slate-400 text-sm">Structuring marketing materials to simulate workflows.</p></div>
+                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">03</div><h4 class="text-lg font-bold text-white">Nginx Setup</h4><p class="text-slate-400 text-sm">Deploying on secure web servers with TLS protection.</p></div>
+                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">04</div><h4 class="text-lg font-bold text-white">Launch</h4><p class="text-slate-400 text-sm">Audit checks to guarantee 200 OK statuses.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 relative overflow-hidden">
+            <div class="max-w-3xl mx-auto px-6 relative z-10">
+                <div id="contact-container" class="bg-dark-800 border border-dark-700 p-8 sm:p-12 rounded-2xl shadow-2xl relative transition-all duration-500">
+                    <!-- Final Success Screen (hidden by default) -->
+                    <div id="contact-success" class="hidden text-center py-10 space-y-6 modal-animate-in">
+                        <div class="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 flex items-center justify-center text-4xl mx-auto animate-bounce"><i class="fa-solid fa-check"></i></div>
+                        <h3 class="text-2xl font-syne font-bold text-white">Message Received!</h3>
+                        <p class="text-slate-400 max-w-md mx-auto">Thank you for reaching out. Our team will review your inquiry and get back to you within 24 business hours.</p>
+                        <button id="reset-contact-btn" class="px-6 py-2 bg-dark-700 text-white rounded-lg text-sm hover:bg-dark-600 transition-colors">Send Another Message</button>
+                    </div>
+                    
+                    <!-- The Form -->
+                    <div id="contact-form-wrapper" class="space-y-8">
+                        <div class="text-center space-y-4"><h2 class="text-3xl font-syne font-bold text-white">Let's Work Together</h2><p class="text-slate-400">Message us about any custom web design or engineering projects.</p></div>
+                        <form id="portfolio-contact-form" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Name</label><input type="text" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-blue text-sm" placeholder="John Doe"></div>
+                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Email</label><input type="email" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-blue text-sm" placeholder="john@example.com"></div>
+                            </div>
+                            <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Project Brief</label><textarea rows="4" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-blue text-sm" placeholder="Tell us a little about your goals..."></textarea></div>
+                            <button id="submit-btn" type="submit" class="w-full py-4 bg-gradient-to-r from-brand-blue to-brand-indigo hover:from-brand-indigo hover:to-brand-purple text-dark-900 font-bold rounded-lg transition-all shadow-lg shadow-brand-blue/15 flex items-center justify-center space-x-2 group">
+                                <span>Submit Inquiry</span><i class="fa-solid fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-900 border-t border-dark-700/50 py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-2 text-xl font-syne font-extrabold text-white tracking-wider"><span>VISUAL</span><span class="text-brand-blue">STUDIO</span><span class="text-brand-indigo">.</span></div>
+            <p class="text-xs text-slate-500">&copy; 2026 Visual Studio Agency. All rights reserved.</p>
+            <div class="flex items-center space-x-2 text-xs text-green-500 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span><span>System Operational</span></div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const body = document.body;
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const inquiryModal = document.getElementById('project-modal');
+        const detailsPanel = document.getElementById('details-panel');
+        const panelTitle = document.getElementById('panel-title');
+        const panelContent = document.getElementById('panel-content');
+        const portfolioGrid = document.getElementById('portfolio-grid');
+        const contactForm = document.getElementById('portfolio-contact-form');
+        const contactWrapper = document.getElementById('contact-form-wrapper');
+        const contactSuccess = document.getElementById('contact-success');
+        const desktopNav = document.getElementById('desktop-nav');
+
+        // Helper to close all interactive overlays
+        function closeOverlays() {
+            mobileMenu.classList.add('hidden');
+            inquiryModal.classList.add('hidden');
+            detailsPanel.classList.add('translate-x-full');
+            body.classList.remove('overflow-hidden');
+        }
+
+        // --- Mobile Menu ---
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Project Inquiry Modal (Quiz) ---
+        const openModalBtns = document.querySelectorAll('.open-inquiry-btn');
+        const closeModalBtn = document.getElementById('close-modal');
+        const quizOptions = document.querySelectorAll('.quiz-option');
+        const modalNextBtn = document.getElementById('modal-next');
+
+        openModalBtns.forEach(btn => btn.addEventListener('click', () => {
+            closeOverlays();
+            inquiryModal.classList.remove('hidden');
+            body.classList.add('overflow-hidden');
+        }));
+
+        closeModalBtn.addEventListener('click', closeOverlays);
+        document.getElementById('modal-overlay').addEventListener('click', closeOverlays);
+
+        quizOptions.forEach(option => option.addEventListener('click', () => {
+            quizOptions.forEach(opt => opt.classList.remove('active'));
+            option.classList.add('active');
+            modalNextBtn.disabled = false;
+        }));
+
+        modalNextBtn.addEventListener('click', () => {
+            alert('Simulation: Quiz submitted. Real site would redirect to detailed form or calendar booking.');
+            closeOverlays();
+        });
+
+        // --- Details Side Panel (Learn More) ---
+        const learnMoreBtns = document.querySelectorAll('.learn-more-btn');
+        const closePanelBtn = document.getElementById('close-panel');
+
+        const serviceDetails = {
+            visual: { title: 'Visual Design Expertise', content: '<ul class="space-y-3 text-sm list-disc list-inside"><li>User Interface (UI) Design</li><li>User Experience (UX) Research</li><li>Design Systems & Styleguides</li><li>Specialized Dark-Mode Aesthetics</li><li>Responsive Web Layouts</li><li>Interactive Mockups</li></ul>' },
+            engineering: { title: 'Web Engineering Capabilities', content: '<ul class="space-y-3 text-sm list-disc list-inside"><li>Single Page Applications (SPA)</li><li>Static Site Generation (SSG)</li><li>React/Vue/Svelte Integration</li><li>API Development & Integration</li><li>Performance Optimization</li><li>SEO-tuned Architecture</li></ul>' },
+            security: { title: 'System Security Standards', content: '<ul class="space-y-3 text-sm list-disc list-inside"><li>Cloud Infrastructure Security</li><li>Reverse Proxy Configuration (Nginx)</li><li>automated SSL/TLS Management</li><li>DDoS Mitigation Strategies</li><li>Penetration Testing Simulation</li><li>Secure Deployment Pipelines</li></ul>' }
+        };
+
+        learnMoreBtns.forEach(btn => btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const serviceKey = btn.closest('.service-card').dataset.service;
+            const data = serviceDetails[serviceKey];
+            panelTitle.textContent = data.title;
+            panelContent.innerHTML = data.content;
+            closeOverlays();
+            detailsPanel.classList.remove('translate-x-full');
+            body.classList.add('overflow-hidden');
+        }));
+
+        closePanelBtn.addEventListener('click', closeOverlays);
+        window.addEventListener('click', (e) => {
+            if (!detailsPanel.contains(e.target) && !detailsPanel.classList.contains('translate-x-full')) closeOverlays();
+        });
+
+        // --- Portfolio Filtering ---
+        const heroShowcaseBtn = document.getElementById('hero-showcase-btn');
+        const filterBtns = document.querySelectorAll('.portfolio-filter');
+        const projectItems = document.querySelectorAll('.project-item');
+
+        filterBtns.forEach(btn => btn.addEventListener('click', () => {
+            const filterValue = btn.dataset.filter;
+            filterBtns.forEach(b => b.classList.remove('bg-dark-700', 'text-white'));
+            btn.classList.add('bg-dark-700', 'text-white');
+            btn.classList.remove('text-slate-400');
+
+            projectItems.forEach(item => {
+                const categories = item.dataset.category.split(' ');
+                if (filterValue === 'all' || categories.includes(filterValue)) {
+                    item.classList.remove('hidden', 'scale-95', 'opacity-0');
+                    setTimeout(() => item.classList.remove('absolute'), 10);
+                } else {
+                    item.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => item.classList.add('hidden', 'absolute'), 500);
+                }
+            });
+        }));
+
+        heroShowcaseBtn.addEventListener('click', () => {
+            document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => document.querySelector('[data-filter="webapp"]').click(), 600);
+        });
+
+        // --- Contact Form Handling ---
+        const submitBtn = document.getElementById('submit-btn');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const originalBtnContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Sending...</span>`;
+            
+            setTimeout(() => {
+                contactWrapper.classList.add('hidden');
+                contactSuccess.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+                contactForm.reset();
+            }, 1800);
+        });
+
+        document.getElementById('reset-contact-btn').addEventListener('click', () => {
+            contactSuccess.classList.add('hidden');
+            contactWrapper.classList.remove('hidden');
+        });
+
+        // --- Nav Highlighting & Mobile Close ---
+        const navLinks = document.querySelectorAll('.nav-link, #mobile-menu a');
+        const sections = document.querySelectorAll('main section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) current = section.getAttribute('id');
+            });
+            document.querySelectorAll('#desktop-nav .nav-link').forEach(link => {
+                link.classList.remove('text-brand-blue');
+                if (link.getAttribute('href').includes(current)) link.classList.add('text-brand-blue');
+            });
+        });
+
+        navLinks.forEach(link => link.addEventListener('click', closeOverlays));
+
+    </script>
+</body>
+</html>
