@@ -1,37 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Studio | Premium Digital Interfaces</title>
-    <!-- Tailwind CSS -->
+    <title>Neural Lab | Системы Искусственного Интеллекта и Автоматизация</title>
+    <!-- Подключение Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
+    <!-- Подключение шрифтов Google Fonts (Inter и Syne) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <!-- Подключение иконок FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        syne: ['Syne', 'sans-serif'],
-                    },
-                    colors: {
-                        dark: {
-                            900: '#0b0c10',
-                            800: '#12141c',
-                            700: '#1e2230',
-                            600: '#2a2f42'
+        // Конфигурация темы Tailwind для ИИ-лаборатории (неоновые акценты, глубокие темные тона)
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Inter', 'sans-serif'],
+                            syne: ['Syne', 'sans-serif'],
                         },
-                        brand: {
-                            blue: '#38bdf8',
-                            indigo: '#6366f1',
-                            purple: '#a855f7'
+                        colors: {
+                            dark: {
+                                900: '#07080d',
+                                800: '#0f111a',
+                                700: '#171b2b',
+                                600: '#22283e'
+                            },
+                            brand: {
+                                cyan: '#06b6d4',
+                                blue: '#3b82f6',
+                                violet: '#8b5cf6'
+                            }
                         }
                     }
                 }
@@ -39,288 +42,352 @@
         }
     </script>
     <style>
+        /* Базовые стили для предотвращения мерцания при загрузке CDN */
+        body {
+            background-color: #07080d !important;
+            color: #cbd5e1 !important;
+        }
+
         .hover-target { transition: all 0.3s ease; }
         .hover-trigger:hover .hover-target {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px -15px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.25);
         }
         
+        /* Анимация появления модальных окон */
         .modal-animate-in { animation: modalIn 0.3s ease forwards; }
-        @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes modalIn { 
+            from { opacity: 0; transform: translateY(10px) scale(0.98); } 
+            to { opacity: 1; transform: translateY(0) scale(1); } 
+        }
 
+        /* Кастомный скроллбар в стиле хай-тек */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0b0c10; }
-        ::-webkit-scrollbar-thumb { background: #1e2230; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+        ::-webkit-scrollbar-track { background: #07080d; }
+        ::-webkit-scrollbar-thumb { background: #171b2b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
 
-        .quiz-option.active { border-color: #38bdf8; background-color: rgba(56, 189, 248, 0.1); color: white; }
+        /* Стиль для активных опций в ИИ-квизе */
+        .quiz-option.active { 
+            border-color: #06b6d4; 
+            background-color: rgba(6, 182, 212, 0.08); 
+            color: #ffffff; 
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+        }
     </style>
 </head>
 <body class="bg-dark-900 text-slate-300 font-sans antialiased overflow-x-hidden">
 
-    <!-- Project Inquiry Modal (Quiz) -->
+    <!-- Интерактивное модальное окно: Квиз по подбору ИИ-решения -->
     <div id="project-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div id="modal-overlay" class="absolute inset-0 bg-dark-900/90 backdrop-blur-sm"></div>
+        <div id="modal-overlay" class="absolute inset-0 bg-dark-900/95 backdrop-blur-sm"></div>
         <div class="relative bg-dark-800 border border-dark-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl modal-animate-in z-10">
             <div class="flex justify-between items-center border-b border-dark-700 pb-4 mb-6">
-                <h3 class="text-xl font-syne font-bold text-white">Start Your Project</h3>
-                <button id="close-modal" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700">
+                <h3 class="text-xl font-syne font-bold text-white tracking-wide">Запустить ИИ-Проект</h3>
+                <button id="close-modal" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700 transition-colors">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <div class="space-y-4">
-                <p class="text-slate-400 text-sm">Select the core service you are interested in:</p>
+                <p class="text-slate-400 text-sm">Выберите направление, которое вас интересует:</p>
                 <div class="grid grid-cols-2 gap-4">
+                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-cyan group transition-all">
+                        <i class="fa-solid fa-brain text-brand-cyan group-hover:scale-110 transition-transform"></i>
+                        <span class="block text-sm font-semibold text-white">Обучение LLM</span>
+                    </button>
                     <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-blue group transition-all">
-                        <i class="fa-solid fa-wand-magic-sparkles text-brand-blue group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">Visual Design</span>
+                        <i class="fa-solid fa-robot text-brand-blue group-hover:scale-110 transition-transform"></i>
+                        <span class="block text-sm font-semibold text-white">ИИ-Агенты</span>
                     </button>
-                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-indigo group transition-all">
-                        <i class="fa-solid fa-code text-brand-indigo group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">Engineering</span>
-                    </button>
-                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-purple group transition-all">
-                        <i class="fa-solid fa-shield-halved text-brand-purple group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">System Security</span>
+                    <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-brand-violet group transition-all">
+                        <i class="fa-solid fa-eye text-brand-violet group-hover:scale-110 transition-transform"></i>
+                        <span class="block text-sm font-semibold text-white">Компьютерное зрение</span>
                     </button>
                     <button class="quiz-option p-4 rounded-xl border border-dark-700 bg-dark-900 text-left space-y-2 hover:border-slate-500 group transition-all">
-                        <i class="fa-solid fa-layer-group text-slate-500 group-hover:scale-110 transition-transform"></i>
-                        <span class="block text-sm font-semibold text-white">Full Stack</span>
+                        <i class="fa-solid fa-chart-line text-slate-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="block text-sm font-semibold text-white">Предиктивная аналитика</span>
                     </button>
                 </div>
             </div>
             <div class="flex justify-end pt-6 mt-6 border-t border-dark-700">
-                <button id="modal-next" disabled class="px-6 py-2.5 bg-gradient-to-r from-brand-blue to-brand-indigo text-dark-900 font-bold rounded-lg text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                    Next Step <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                <button id="modal-next" disabled class="px-6 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-brand-cyan/20">
+                    Далее <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Details Side Panel -->
+    <!-- Боковая интерактивная панель: Детализация услуг -->
     <div id="details-panel" class="fixed inset-y-0 right-0 z-[100] w-full max-w-md bg-dark-800 border-l border-dark-700 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out p-6 flex flex-col justify-between">
         <div>
             <div class="flex justify-between items-center border-b border-dark-700 pb-4 mb-6">
-                <h3 id="panel-title" class="text-lg font-syne font-bold text-white">Service Details</h3>
-                <button id="close-panel" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700">
+                <h3 id="panel-title" class="text-lg font-syne font-bold text-white">Детали технологии</h3>
+                <button id="close-panel" class="text-slate-500 hover:text-white p-2 rounded-full hover:bg-dark-700 transition-colors">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <div id="panel-content" class="text-slate-400 space-y-4">
-                <!-- Dynamic Content injected here -->
+                <!-- Контент динамически внедряется через JS -->
             </div>
         </div>
-        <button class="open-inquiry-btn w-full py-3 bg-gradient-to-r from-brand-blue to-brand-indigo text-dark-900 font-bold rounded-lg mt-6">
-            Get Started Now
+        <button class="open-inquiry-btn w-full py-3 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg mt-6 shadow-lg shadow-brand-cyan/15 hover:opacity-90 transition-opacity">
+            Начать интеграцию
         </button>
     </div>
 
-    <!-- Header -->
+    <!-- Шапка сайта (Glassmorphic Header) -->
     <header class="sticky top-0 z-50 backdrop-blur-md bg-dark-900/80 border-b border-dark-700/50 transition-all">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center space-x-2 text-2xl font-syne font-extrabold text-white tracking-wider">
-                <span>VISUAL</span><span class="text-brand-blue">STUDIO</span><span class="text-brand-indigo">.</span>
+                <span>NEURAL</span><span class="text-brand-cyan">LAB</span><span class="text-brand-blue">.</span>
             </a>
 
+            <!-- Навигация -->
             <nav id="desktop-nav" class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#about" class="nav-link text-slate-400 hover:text-white transition-colors">About</a>
-                <a href="#services" class="nav-link text-slate-400 hover:text-white transition-colors">Services</a>
-                <a href="#work" class="nav-link text-slate-400 hover:text-white transition-colors">Work</a>
-                <a href="#process" class="nav-link text-slate-400 hover:text-white transition-colors">Process</a>
-                <a href="#contact" class="nav-link text-slate-400 hover:text-white transition-colors">Contact</a>
+                <a href="#about" class="nav-link text-slate-400 hover:text-white transition-colors">О нас</a>
+                <a href="#services" class="nav-link text-slate-400 hover:text-white transition-colors">Решения</a>
+                <a href="#work" class="nav-link text-slate-400 hover:text-white transition-colors">Кейсы</a>
+                <a href="#process" class="nav-link text-slate-400 hover:text-white transition-colors">Процесс</a>
+                <a href="#contact" class="nav-link text-slate-400 hover:text-white transition-colors">Контакты</a>
             </nav>
 
             <div class="hidden md:block">
-                <button class="open-inquiry-btn px-5 py-2.5 bg-gradient-to-r from-brand-blue to-brand-indigo hover:from-brand-indigo hover:to-brand-purple text-dark-900 font-bold rounded-lg text-sm transition-all shadow-lg shadow-brand-blue/10 transform hover:-translate-y-0.5">
-                    Start a Project
+                <button class="open-inquiry-btn px-5 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg text-sm transition-all shadow-lg shadow-brand-cyan/10 transform hover:-translate-y-0.5">
+                    Запустить ИИ
                 </button>
             </div>
 
-            <button id="mobile-menu-btn" class="md:hidden text-white p-2">
+            <!-- Кнопка мобильного меню -->
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2 hover:text-brand-cyan transition-colors">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
         </div>
 
+        <!-- Мобильное выпадающее меню -->
         <div id="mobile-menu" class="hidden md:hidden bg-dark-800 border-b border-dark-700 px-6 py-6 space-y-4">
-            <a href="#about" class="block text-slate-300 hover:text-brand-blue text-lg">About</a>
-            <a href="#services" class="block text-slate-300 hover:text-brand-blue text-lg">Services</a>
-            <a href="#work" class="block text-slate-300 hover:text-brand-blue text-lg">Work</a>
-            <a href="#process" class="block text-slate-300 hover:text-brand-blue text-lg">Process</a>
-            <a href="#contact" class="block text-slate-300 hover:text-brand-blue text-lg">Contact</a>
+            <a href="#about" class="block text-slate-300 hover:text-brand-cyan text-lg">О нас</a>
+            <a href="#services" class="block text-slate-300 hover:text-brand-cyan text-lg">Решения</a>
+            <a href="#work" class="block text-slate-300 hover:text-brand-cyan text-lg">Кейсы</a>
+            <a href="#process" class="block text-slate-300 hover:text-brand-cyan text-lg">Процесс</a>
+            <a href="#contact" class="block text-slate-300 hover:text-brand-cyan text-lg">Контакты</a>
             <div class="pt-4 border-t border-dark-700">
-                <button class="open-inquiry-btn w-full text-center py-3 bg-gradient-to-r from-brand-blue to-brand-indigo text-dark-900 font-bold rounded-lg">
-                    Start a Project
+                <button class="open-inquiry-btn w-full text-center py-3 bg-gradient-to-r from-brand-cyan to-brand-blue text-dark-900 font-bold rounded-lg">
+                    Запустить ИИ
                 </button>
             </div>
         </div>
     </header>
 
     <main>
-        <!-- Hero Section -->
+        <!-- Главный экран (Hero Section) -->
         <section id="about" class="relative py-24 md:py-36 overflow-hidden">
-            <div class="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none"></div>
+            <!-- Фоновые неоновые свечения -->
+            <div class="absolute top-1/4 left-1/10 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-1/4 right-1/10 w-96 h-96 bg-brand-violet/5 rounded-full blur-3xl pointer-events-none"></div>
+
             <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-7 space-y-8">
-                    <div class="inline-flex items-center space-x-2 bg-dark-800 border border-dark-700 px-3 py-1.5 rounded-full text-xs text-brand-blue font-semibold uppercase tracking-wider">
-                        <span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
-                        <span>Design & Code Agency</span>
+                    <div class="inline-flex items-center space-x-2 bg-dark-800 border border-dark-700 px-3 py-1.5 rounded-full text-xs text-brand-cyan font-semibold uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+                        <span>AI Research & Development</span>
                     </div>
                     <h1 class="text-4xl sm:text-5xl md:text-6xl font-syne font-extrabold text-white leading-tight">
-                        We build immersive <span class="bg-gradient-to-r from-brand-blue via-brand-indigo to-brand-purple bg-clip-text text-transparent">digital interfaces</span>
+                        Внедряем решения <br> на базе <span class="bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-violet bg-clip-text text-transparent">нейросетей</span>
                     </h1>
                     <p class="text-slate-400 text-lg max-w-xl">
-                        An award-winning creative studio crafting premium websites, high-fidelity brand identities, and custom digital platforms.
+                        Создаем кастомные LLM-модели, автономных ИИ-агентов и интеллектуальные алгоритмы компьютерного зрения для оптимизации и автоматизации вашего бизнеса.
                     </p>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
-                        <button id="hero-showcase-btn" class="px-8 py-4 bg-gradient-to-r from-brand-blue to-brand-indigo hover:from-brand-indigo hover:to-brand-purple text-dark-900 font-bold rounded-lg text-center transition-all transform hover:-translate-y-0.5">
-                            Explore Showcase
+                        <button id="hero-showcase-btn" class="px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg text-center transition-all transform hover:-translate-y-0.5 shadow-lg shadow-brand-cyan/20">
+                            Изучить кейсы
                         </button>
                         <button class="open-inquiry-btn px-8 py-4 bg-dark-800 hover:bg-dark-700 border border-dark-700 text-white font-semibold rounded-lg text-center transition-all">
-                            Start Your Project
+                            Подобрать ИИ-решение
                         </button>
                     </div>
                 </div>
+                
+                <!-- Интерактивный виджет статистики ИИ -->
                 <div class="lg:col-span-5">
-                    <div class="relative w-full max-w-md mx-auto aspect-square rounded-2xl bg-gradient-to-tr from-dark-800 to-dark-700 p-1 border border-dark-600/30">
+                    <div class="relative w-full max-w-md mx-auto aspect-square rounded-2xl bg-gradient-to-tr from-dark-800 to-dark-700 p-1 border border-dark-600/30 shadow-2xl">
                         <div class="w-full h-full bg-dark-800 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative">
                             <div class="flex justify-between items-center text-xs">
-                                <span class="text-brand-blue font-bold tracking-widest uppercase">Visual Engine</span>
-                                <span class="text-green-500 flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>Active</span>
+                                <span class="text-brand-cyan font-bold tracking-widest uppercase">Мониторинг кластера</span>
+                                <span class="text-green-500 flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>Стабилен</span>
                             </div>
                             <div class="text-center space-y-2">
-                                <div class="text-6xl font-syne font-extrabold text-white">4.9/5</div>
-                                <p class="text-xs text-slate-400">Client Satisfaction Score</p>
+                                <div class="text-6xl font-syne font-extrabold text-white">99.4%</div>
+                                <p class="text-xs text-slate-400">Точность классификации & генерации моделей</p>
                             </div>
-                            <div class="text-xs text-slate-500 text-center">Interactive components ready.</div>
+                            <div class="text-xs text-slate-500 text-center">Все ИИ-контейнеры работают в штатном режиме.</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Services -->
+        <!-- Направления Услуг (Services) -->
         <section id="services" class="py-24 bg-dark-800 border-y border-dark-700/40">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                    <span class="text-brand-blue text-sm font-bold tracking-widest uppercase">Expertise</span>
-                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Interactive Solutions</h2>
+                    <span class="text-brand-cyan text-sm font-bold tracking-widest uppercase">Направления работы</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Наши ИИ-продукты</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Service 1 -->
+                    <!-- Услуга 1 -->
                     <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="visual">
                         <div class="space-y-6">
-                            <div class="w-12 h-12 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue text-xl"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                            <h3 class="text-xl font-bold text-white">Visual Design</h3>
-                            <p class="text-slate-400 text-sm">Intuitive interfaces, specialized aesthetics, branding guidelines, and interactive mockups.</p>
+                            <div class="w-12 h-12 rounded-lg bg-brand-cyan/10 flex items-center justify-center text-brand-cyan text-xl"><i class="fa-solid fa-brain"></i></div>
+                            <h3 class="text-xl font-bold text-white">Обучение LLM</h3>
+                            <p class="text-slate-400 text-sm">Тонкая настройка (Fine-Tuning) больших языковых моделей под специфику вашего бизнеса и баз данных.</p>
                         </div>
-                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-blue hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
-                            <span>Learn More</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-cyan hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
+                            <span>Подробнее</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </button>
                     </div>
-                    <!-- Service 2 -->
+                    <!-- Услуга 2 -->
                     <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="engineering">
                         <div class="space-y-6">
-                            <div class="w-12 h-12 rounded-lg bg-brand-indigo/10 flex items-center justify-center text-brand-indigo text-xl"><i class="fa-solid fa-code"></i></div>
-                            <h3 class="text-xl font-bold text-white">Engineering</h3>
-                            <p class="text-slate-400 text-sm">Light, SEO-tuned single-page apps, static landing pages, and robust backend integrations.</p>
+                            <div class="w-12 h-12 rounded-lg bg-brand-blue/10 flex items-center justify-center text-brand-blue text-xl"><i class="fa-solid fa-robot"></i></div>
+                            <h3 class="text-xl font-bold text-white">ИИ-Агенты</h3>
+                            <p class="text-slate-400 text-sm">Создание умных ассистентов с долгосрочной памятью, способных автономно выполнять многоэтапные цепочки задач.</p>
                         </div>
-                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-indigo hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
-                            <span>Learn More</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-blue hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
+                            <span>Подробнее</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </button>
                     </div>
-                    <!-- Service 3 -->
+                    <!-- Услуга 3 -->
                     <div class="service-card hover-trigger bg-dark-900 border border-dark-700/60 p-8 rounded-xl hover-target transition-all flex flex-col justify-between" data-service="security">
                         <div class="space-y-6">
-                            <div class="w-12 h-12 rounded-lg bg-brand-purple/10 flex items-center justify-center text-brand-purple text-xl"><i class="fa-solid fa-shield-halved"></i></div>
-                            <h3 class="text-xl font-bold text-white">Security</h3>
-                            <p class="text-slate-400 text-sm">Reverse proxy configs, robust SSL/TLS setups, and secure deployment strategies.</p>
+                            <div class="w-12 h-12 rounded-lg bg-brand-violet/10 flex items-center justify-center text-brand-violet text-xl"><i class="fa-solid fa-eye"></i></div>
+                            <h3 class="text-xl font-bold text-white">Компьютерное зрение</h3>
+                            <p class="text-slate-400 text-sm">Системы распознавания объектов, трекинга людей, контроля качества на производстве и умной аналитики видеопотока.</p>
                         </div>
-                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-purple hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
-                            <span>Learn More</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        <button class="learn-more-btn inline-flex items-center space-x-2 text-brand-violet hover:text-white text-xs font-semibold uppercase tracking-wider mt-8 group">
+                            <span>Подробнее</span><i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Works -->
+        <!-- Кейсы / Проекты (Works) -->
         <section id="work" class="py-24">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
                     <div class="space-y-4">
-                        <span class="text-brand-indigo text-sm font-bold tracking-widest uppercase">Portfolio</span>
-                        <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Case Studies</h2>
+                        <span class="text-brand-blue text-sm font-bold tracking-widest uppercase">Портфолио</span>
+                        <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Реализованные проекты</h2>
                     </div>
                     <div class="flex items-center space-x-2 bg-dark-800 border border-dark-700 p-1.5 rounded-lg text-xs font-medium">
-                        <button class="portfolio-filter px-4 py-1.5 rounded bg-dark-700 text-white" data-filter="all">All</button>
-                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="webapp">Web App</button>
-                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="fintech">Fintech</button>
+                        <button class="portfolio-filter px-4 py-1.5 rounded bg-dark-700 text-white" data-filter="all">Все</button>
+                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="llm">Языковые модели</button>
+                        <button class="portfolio-filter px-4 py-1.5 rounded text-slate-400 hover:text-white" data-filter="vision">Компьютерное зрение</button>
                     </div>
                 </div>
                 <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Project 1 -->
-                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="webapp fintech">
-                        <div class="aspect-video bg-gradient-to-br from-indigo-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
-                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all"></div>
+                    <!-- Проект 1 -->
+                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="llm">
+                        <div class="aspect-video bg-gradient-to-br from-cyan-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all flex flex-col justify-between p-4">
+                                <div class="h-2 bg-brand-cyan/20 rounded w-1/3"></div>
+                                <div class="space-y-2">
+                                    <div class="h-2 bg-slate-700 rounded w-5/6"></div>
+                                    <div class="h-2 bg-slate-700 rounded w-1/2"></div>
+                                </div>
+                                <div class="h-5 bg-brand-cyan/10 border border-brand-cyan/30 rounded w-1/4"></div>
+                            </div>
                         </div>
                         <div class="p-6 flex justify-between items-center">
-                            <h3 class="text-lg font-bold text-white">Aether Pay</h3>
-                            <button class="text-slate-500 hover:text-brand-blue"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                            <div>
+                                <span class="text-xs text-brand-cyan font-semibold uppercase tracking-wider">LLM & RAG</span>
+                                <h3 class="text-lg font-bold text-white mt-1">ДокАналитик AI</h3>
+                            </div>
+                            <button class="text-slate-500 hover:text-brand-cyan"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
                         </div>
                     </div>
-                    <!-- Project 2 -->
-                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="webapp">
-                        <div class="aspect-video bg-gradient-to-br from-purple-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
-                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all"></div>
+                    <!-- Проект 2 -->
+                    <div class="project-item group bg-dark-800 rounded-xl overflow-hidden border border-dark-700/50" data-category="vision">
+                        <div class="aspect-video bg-gradient-to-br from-violet-950 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                            <div class="w-3/4 h-2/3 bg-dark-800 border border-dark-700 rounded-lg transform translate-y-8 group-hover:translate-y-4 transition-all flex flex-col justify-between p-4">
+                                <div class="flex justify-between items-center">
+                                    <div class="h-2 bg-brand-violet/20 rounded w-1/4"></div>
+                                    <div class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
+                                </div>
+                                <div class="border border-brand-violet/40 rounded h-12 w-full flex items-center justify-center"><i class="fa-solid fa-qrcode text-brand-violet"></i></div>
+                                <div class="h-2 bg-slate-700 rounded w-1/2"></div>
+                            </div>
                         </div>
                         <div class="p-6 flex justify-between items-center">
-                            <h3 class="text-lg font-bold text-white">Solas Ecosystem</h3>
-                            <button class="text-slate-500 hover:text-brand-purple"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                            <div>
+                                <span class="text-xs text-brand-violet font-semibold uppercase tracking-wider">Computer Vision</span>
+                                <h3 class="text-lg font-bold text-white mt-1">НейроКонтроль Потока</h3>
+                            </div>
+                            <button class="text-slate-500 hover:text-brand-violet"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Process -->
+        <!-- Процесс Внедрения (Process) -->
         <section id="process" class="py-24 bg-dark-800 border-t border-dark-700/40">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                    <span class="text-brand-purple text-sm font-bold tracking-widest uppercase">The Strategy</span>
-                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">How We Deploy</h2>
+                    <span class="text-brand-violet text-sm font-bold tracking-widest uppercase">Методология R&D</span>
+                    <h2 class="text-3xl sm:text-4xl font-syne font-bold text-white">Этапы интеграции ИИ</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">01</div><h4 class="text-lg font-bold text-white">Consulting</h4><p class="text-slate-400 text-sm">Defining structural scopes and server specifications.</p></div>
-                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">02</div><h4 class="text-lg font-bold text-white">Design</h4><p class="text-slate-400 text-sm">Structuring marketing materials to simulate workflows.</p></div>
-                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">03</div><h4 class="text-lg font-bold text-white">Nginx Setup</h4><p class="text-slate-400 text-sm">Deploying on secure web servers with TLS protection.</p></div>
-                    <div class="space-y-4"><div class="text-5xl font-syne font-extrabold text-dark-700">04</div><h4 class="text-lg font-bold text-white">Launch</h4><p class="text-slate-400 text-sm">Audit checks to guarantee 200 OK statuses.</p></div>
+                    <div class="space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-dark-700">01</div>
+                        <h4 class="text-lg font-bold text-white">Анализ бизнес-логики</h4>
+                        <p class="text-slate-400 text-sm">Изучаем ваши процессы и определяем рутинные задачи, которые эффективнее всего делегировать ИИ.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-dark-700">02</div>
+                        <h4 class="text-lg font-bold text-white">Сбор данных и разметка</h4>
+                        <p class="text-slate-400 text-sm">Подготавливаем обучающие выборки, очищаем датасеты и настраиваем конвейеры валидации данных.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-dark-700">03</div>
+                        <h4 class="text-lg font-bold text-white">Обучение и валидация</h4>
+                        <p class="text-slate-400 text-sm">Проводим Fine-Tuning моделей на мощных GPU-кластерах до достижения целевой точности.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="text-5xl font-syne font-extrabold text-dark-700">04</div>
+                        <h4 class="text-lg font-bold text-white">Продакшн и API</h4>
+                        <p class="text-slate-400 text-sm">Упаковываем модель в микросервисы, настраиваем инференс с низкой задержкой и внедряем в вашу систему.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- Контактная Форма (Contact Section) -->
         <section id="contact" class="py-24">
             <div class="max-w-3xl mx-auto px-6">
                 <div id="contact-container" class="bg-dark-800 border border-dark-700 p-8 sm:p-12 rounded-2xl shadow-2xl relative transition-all">
-                    <!-- Success Screen -->
+                    <!-- Успешный экран после отправки -->
                     <div id="contact-success" class="hidden text-center py-10 space-y-6">
                         <div class="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 text-green-500 flex items-center justify-center text-4xl mx-auto animate-bounce"><i class="fa-solid fa-check"></i></div>
-                        <h3 class="text-2xl font-syne font-bold text-white">Message Received!</h3>
-                        <p class="text-slate-400 max-w-md mx-auto">Thank you for reaching out. We will review your inquiry and get back to you within 24 business hours.</p>
-                        <button id="reset-contact-btn" class="px-6 py-2 bg-dark-700 text-white rounded-lg text-sm hover:bg-dark-600 transition-colors">Send Another Message</button>
+                        <h3 class="text-2xl font-syne font-bold text-white">Заявка принята!</h3>
+                        <p class="text-slate-400 max-w-md mx-auto">Спасибо за обращение. Наш ИИ-архитектор проанализирует ваш запрос и свяжется с вами в течение рабочего дня.</p>
+                        <button id="reset-contact-btn" class="px-6 py-2 bg-dark-700 text-white rounded-lg text-sm hover:bg-dark-600 transition-colors">Отправить новый запрос</button>
                     </div>
                     
-                    <!-- Form -->
+                    <!-- Сама Форма -->
                     <div id="contact-form-wrapper" class="space-y-8">
-                        <div class="text-center space-y-4"><h2 class="text-3xl font-syne font-bold text-white">Let's Work Together</h2><p class="text-slate-400">Message us about any custom web design or engineering projects.</p></div>
+                        <div class="text-center space-y-4">
+                            <h2 class="text-3xl font-syne font-bold text-white">Обсудить ИИ-проект</h2>
+                            <p class="text-slate-400">Оставьте заявку, чтобы получить экспресс-аудит ваших процессов на готовность к внедрению нейросетей.</p>
+                        </div>
                         <form id="portfolio-contact-form" class="space-y-6">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Name</label><input type="text" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-blue text-sm" placeholder="John Doe"></div>
-                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Email</label><input type="email" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-blue text-sm" placeholder="john@example.com"></div>
+                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Ваше имя</label><input type="text" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-cyan text-sm" placeholder="Константин"></div>
+                                <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Рабочий Email</label><input type="email" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-cyan text-sm" placeholder="ceo@neural-lab.ru"></div>
                             </div>
-                            <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Project Brief</label><textarea rows="4" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-blue text-sm" placeholder="Tell us a little about your goals..."></textarea></div>
-                            <button id="submit-btn" type="submit" class="w-full py-4 bg-gradient-to-r from-brand-blue to-brand-indigo hover:from-brand-indigo hover:to-brand-purple text-dark-900 font-bold rounded-lg transition-all flex items-center justify-center space-x-2 group">
-                                <span>Submit Inquiry</span><i class="fa-solid fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
+                            <div><label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Описание задачи</label><textarea rows="4" required class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-cyan text-sm" placeholder="Опишите, какую рутину вы бы хотели автоматизировать с помощью ИИ..."></textarea></div>
+                            <button id="submit-btn" type="submit" class="w-full py-4 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-violet text-dark-900 font-bold rounded-lg transition-all flex items-center justify-center space-x-2 group shadow-lg shadow-brand-cyan/15">
+                                <span>Отправить запрос</span><i class="fa-solid fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
                             </button>
                         </form>
                     </div>
@@ -329,144 +396,180 @@
         </section>
     </main>
 
-    <!-- Footer -->
+    <!-- Подвал (Footer) -->
     <footer class="bg-dark-900 border-t border-dark-700/50 py-12">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center space-x-2 text-xl font-syne font-extrabold text-white tracking-wider"><span>VISUAL</span><span class="text-brand-blue">STUDIO</span><span class="text-brand-indigo">.</span></div>
-            <p class="text-xs text-slate-500">&copy; 2026 Visual Studio Agency. All rights reserved.</p>
+            <div class="flex items-center space-x-2 text-xl font-syne font-extrabold text-white tracking-wider"><span>NEURAL</span><span class="text-brand-cyan">LAB</span><span class="text-brand-blue">.</span></div>
+            <p class="text-xs text-slate-500">&copy; 2026 Лаборатория Нейротехнологий Neural Lab. Все права защищены.</p>
             <div class="flex items-center space-x-2 text-xs text-green-500 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span><span>System Operational</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span><span>Ядро ИИ Активно</span>
             </div>
         </div>
     </footer>
 
     <script>
-        const body = document.body;
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const inquiryModal = document.getElementById('project-modal');
-        const detailsPanel = document.getElementById('details-panel');
-        const panelTitle = document.getElementById('panel-title');
-        const panelContent = document.getElementById('panel-content');
-        const portfolioGrid = document.getElementById('portfolio-grid');
-        const contactForm = document.getElementById('portfolio-contact-form');
-        const contactWrapper = document.getElementById('contact-form-wrapper');
-        const contactSuccess = document.getElementById('contact-success');
+        // Инициализация скриптов после полной загрузки документа
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const inquiryModal = document.getElementById('project-modal');
+            const detailsPanel = document.getElementById('details-panel');
+            const panelTitle = document.getElementById('panel-title');
+            const panelContent = document.getElementById('panel-content');
+            const contactForm = document.getElementById('portfolio-contact-form');
+            const contactWrapper = document.getElementById('contact-form-wrapper');
+            const contactSuccess = document.getElementById('contact-success');
 
-        function closeOverlays() {
-            mobileMenu.classList.add('hidden');
-            inquiryModal.classList.add('hidden');
-            detailsPanel.classList.add('translate-x-full');
-            body.classList.remove('overflow-hidden');
-        }
+            // Безопасное закрытие всех оверлеев
+            function closeOverlays() {
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                if (inquiryModal) inquiryModal.classList.add('hidden');
+                if (detailsPanel) detailsPanel.classList.add('translate-x-full');
+                if (body) body.classList.remove('overflow-hidden');
+            }
 
-        // Mobile Menu
-        mobileMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileMenu.classList.toggle('hidden');
-        });
+            // Мобильная шторка меню
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
 
-        // Quiz Modal
-        const openModalBtns = document.querySelectorAll('.open-inquiry-btn');
-        const closeModalBtn = document.getElementById('close-modal');
-        const quizOptions = document.querySelectorAll('.quiz-option');
-        const modalNextBtn = document.getElementById('modal-next');
+            // Логика работы квиза старта проекта (модалка)
+            const openModalBtns = document.querySelectorAll('.open-inquiry-btn');
+            const closeModalBtn = document.getElementById('close-modal');
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            const modalNextBtn = document.getElementById('modal-next');
+            const modalOverlay = document.getElementById('modal-overlay');
 
-        openModalBtns.forEach(btn => btn.addEventListener('click', () => {
-            closeOverlays();
-            inquiryModal.classList.remove('hidden');
-            body.classList.add('overflow-hidden');
-        }));
+            openModalBtns.forEach(btn => btn.addEventListener('click', () => {
+                closeOverlays();
+                if (inquiryModal) inquiryModal.classList.remove('hidden');
+                if (body) body.classList.add('overflow-hidden');
+            }));
 
-        closeModalBtn.addEventListener('click', closeOverlays);
-        document.getElementById('modal-overlay').addEventListener('click', closeOverlays);
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeOverlays);
+            if (modalOverlay) modalOverlay.addEventListener('click', closeOverlays);
 
-        quizOptions.forEach(option => option.addEventListener('click', () => {
-            quizOptions.forEach(opt => opt.classList.remove('active'));
-            option.classList.add('active');
-            modalNextBtn.disabled = false;
-        }));
+            quizOptions.forEach(option => option.addEventListener('click', () => {
+                quizOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                if (modalNextBtn) modalNextBtn.disabled = false;
+            }));
 
-        modalNextBtn.addEventListener('click', () => {
-            closeOverlays();
-            contactWrapper.classList.add('hidden');
-            contactSuccess.classList.remove('hidden');
-            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
-        });
+            if (modalNextBtn) {
+                modalNextBtn.addEventListener('click', () => {
+                    closeOverlays();
+                    if (contactWrapper) contactWrapper.classList.add('hidden');
+                    if (contactSuccess) contactSuccess.classList.remove('hidden');
+                    const contactSection = document.querySelector('#contact');
+                    if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
 
-        // Service Drawer
-        const learnMoreBtns = document.querySelectorAll('.learn-more-btn');
-        const closePanelBtn = document.getElementById('close-panel');
+            // Детализация услуг (Sidebar Drawer)
+            const learnMoreBtns = document.querySelectorAll('.learn-more-btn');
+            const closePanelBtn = document.getElementById('close-panel');
 
-        const serviceDetails = {
-            visual: { title: 'Visual Design Expertise', content: '<ul class="space-y-3 text-sm list-disc list-inside"><li>User Interface (UI) Design</li><li>User Experience (UX) Research</li><li>Design Systems & Styleguides</li><li>Specialized Dark-Mode Aesthetics</li><li>Responsive Web Layouts</li><li>Interactive Mockups</li></ul>' },
-            engineering: { title: 'Web Engineering Capabilities', content: '<ul class="space-y-3 text-sm list-disc list-inside"><li>Single Page Applications (SPA)</li><li>Static Site Generation (SSG)</li><li>React/Vue/Svelte Integration</li><li>API Development & Integration</li><li>Performance Optimization</li><li>SEO-tuned Architecture</li></ul>' },
-            security: { title: 'System Security Standards', content: '<ul class="space-y-3 text-sm list-disc list-inside"><li>Cloud Infrastructure Security</li><li>Reverse Proxy Configuration (Nginx)</li><li>Automated SSL/TLS Management</li><li>DDoS Mitigation Strategies</li><li>Penetration Testing Simulation</li><li>Secure Deployment Pipelines</li></ul>' }
-        };
-
-        learnMoreBtns.forEach(btn => btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const serviceKey = btn.closest('.service-card').dataset.service;
-            const data = serviceDetails[serviceKey];
-            panelTitle.textContent = data.title;
-            panelContent.innerHTML = data.content;
-            closeOverlays();
-            detailsPanel.classList.remove('translate-x-full');
-            body.classList.add('overflow-hidden');
-        }));
-
-        closePanelBtn.addEventListener('click', closeOverlays);
-
-        // Portfolio filtering
-        const heroShowcaseBtn = document.getElementById('hero-showcase-btn');
-        const filterBtns = document.querySelectorAll('.portfolio-filter');
-        const projectItems = document.querySelectorAll('.project-item');
-
-        filterBtns.forEach(btn => btn.addEventListener('click', () => {
-            const filterValue = btn.dataset.filter;
-            filterBtns.forEach(b => b.classList.remove('bg-dark-700', 'text-white'));
-            btn.classList.add('bg-dark-700', 'text-white');
-            btn.classList.remove('text-slate-400');
-
-            projectItems.forEach(item => {
-                const categories = item.dataset.category.split(' ');
-                if (filterValue === 'all' || categories.includes(filterValue)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
+            const serviceDetails = {
+                visual: { 
+                    title: 'Интеграция Языковых Моделей', 
+                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Тонкая настройка (Fine-Tuning) LLaMA-3, Mistral, Qwen</li><li>Разработка RAG-систем (поиск по базам документов)</li><li>Оптимизация инференса моделей под малый VRAM</li><li>Локальное развертывание (On-Premise) без доступа к OpenAI</li><li>Интеграция векторных баз данных (Chroma, Qdrant)</li></ul>' 
+                },
+                engineering: { 
+                    title: 'Автономные ИИ-Агенты', 
+                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Проектирование мультиагентных систем на LangGraph</li><li>Интеграция с корпоративными API, CRM и ERP системами</li><li>Внедрение планировщиков задач и баз краткосрочной памяти</li><li>Обучение агентов работе в терминале и анализу файлов</li><li>Мониторинг поведения агентов в реальном времени</li></ul>' 
+                },
+                security: { 
+                    title: 'Компьютерное Зрение (Computer Vision)', 
+                    content: '<ul class="space-y-3 text-sm list-disc list-inside text-slate-300"><li>Кастомные модели детекции на базе YOLOv8</li><li>Распознавание лиц и трекинг объектов на видеопотоке</li><li>Интеграция с существующими RTSP-камерами</li><li>Автоматизированный контроль качества продукции</li><li>Разметка данных с ИИ-ускорением</li></ul>' 
                 }
+            };
+
+            learnMoreBtns.forEach(btn => btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.service-card');
+                if (!card) return;
+                const serviceKey = card.dataset.service;
+                const data = serviceDetails[serviceKey];
+                if (!data) return;
+                if (panelTitle) panelTitle.textContent = data.title;
+                if (panelContent) panelContent.innerHTML = data.content;
+                closeOverlays();
+                if (detailsPanel) detailsPanel.classList.remove('translate-x-full');
+                if (body) body.classList.add('overflow-hidden');
+            }));
+
+            if (closePanelBtn) closePanelBtn.addEventListener('click', closeOverlays);
+
+            // Фильтрация кейсов в портфолио
+            const heroShowcaseBtn = document.getElementById('hero-showcase-btn');
+            const filterBtns = document.querySelectorAll('.portfolio-filter');
+            const projectItems = document.querySelectorAll('.project-item');
+
+            filterBtns.forEach(btn => btn.addEventListener('click', () => {
+                const filterValue = btn.dataset.filter;
+                filterBtns.forEach(b => b.classList.remove('bg-dark-700', 'text-white'));
+                btn.classList.add('bg-dark-700', 'text-white');
+                btn.classList.remove('text-slate-400');
+
+                projectItems.forEach(item => {
+                    const categories = item.dataset.category ? item.dataset.category.split(' ') : [];
+                    if (filterValue === 'all' || categories.includes(filterValue)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }));
+
+            if (heroShowcaseBtn) {
+                heroShowcaseBtn.addEventListener('click', () => {
+                    const workSection = document.querySelector('#work');
+                    if (workSection) workSection.scrollIntoView({ behavior: 'smooth' });
+                    const defaultFilter = document.querySelector('[data-filter="llm"]');
+                    if (defaultFilter) {
+                        setTimeout(() => defaultFilter.click(), 400);
+                    }
+                });
+            }
+
+            // Обработка отправки формы заявки
+            const submitBtn = document.getElementById('submit-btn');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Обработка ИИ...</span>`;
+                    }
+                    
+                    setTimeout(() => {
+                        if (contactWrapper) contactWrapper.classList.add('hidden');
+                        if (contactSuccess) contactSuccess.classList.remove('hidden');
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = `<span>Отправить запрос</span><i class="fa-solid fa-paper-plane text-sm"></i>`;
+                        }
+                        contactForm.reset();
+                    }, 1500);
+                });
+            }
+
+            const resetContactBtn = document.getElementById('reset-contact-btn');
+            if (resetContactBtn) {
+                resetContactBtn.addEventListener('click', () => {
+                    if (contactSuccess) contactSuccess.classList.add('hidden');
+                    if (contactWrapper) contactWrapper.classList.remove('hidden');
+                });
+            }
+
+            // Закрытие оверлеев по кнопке Escape
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeOverlays();
             });
-        }));
-
-        heroShowcaseBtn.addEventListener('click', () => {
-            document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => document.querySelector('[data-filter="webapp"]').click(), 400);
-        });
-
-        // Contact Submit
-        const submitBtn = document.getElementById('submit-btn');
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Sending...</span>`;
-            
-            setTimeout(() => {
-                contactWrapper.classList.add('hidden');
-                contactSuccess.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<span>Submit Inquiry</span><i class="fa-solid fa-paper-plane text-sm"></i>`;
-                contactForm.reset();
-            }, 1500);
-        });
-
-        document.getElementById('reset-contact-btn').addEventListener('click', () => {
-            contactSuccess.classList.add('hidden');
-            contactWrapper.classList.remove('hidden');
-        });
-
-        // Close on escape
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeOverlays();
         });
     </script>
 </body>
