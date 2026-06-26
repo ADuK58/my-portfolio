@@ -33,7 +33,7 @@ KEY="/etc/letsencrypt/live/${DOMAIN}/privkey.pem"
 REPO="https://github.com/ADuK58/my-portfolio.git"
 WEBROOT="/var/www/html"
 XUI_PORT="1435"                    # порт панели 3x-ui
-XUI_API="http://127.0.0.1:${XUI_PORT}"
+XUI_API="https://127.0.0.1:${XUI_PORT}"
 
 # ── Проверки ──────────────────────────────────────────────────────────────────
 [[ $EUID -eq 0 ]] || die "Запусти скрипт от root (sudo bash setup.sh)"
@@ -138,7 +138,7 @@ info "Настройка inbound в 3x-ui..."
 
 # Ждём пока панель поднимется
 for i in {1..10}; do
-    if curl -sf "${XUI_API}/login" -o /dev/null 2>&1; then
+    if curl -sfk "${XUI_API}/login" -o /dev/null 2>&1; then
         break
     fi
     warn "Ожидание панели 3x-ui... (${i}/10)"
@@ -155,7 +155,7 @@ echo ""
 
 # Логин в панель — получаем cookie сессии
 COOKIE_JAR=$(mktemp)
-LOGIN_RESP=$(curl -sf -c "$COOKIE_JAR" \
+LOGIN_RESP=$(curl -sfk -c "$COOKIE_JAR" \
     -X POST "${XUI_API}/login" \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -d "username=${XUI_USER}&password=${XUI_PASS}" 2>&1) || true
@@ -221,7 +221,7 @@ INBOUND_JSON=$(cat <<EOF
 EOF
 )
 
-ADD_RESP=$(curl -sf -b "$COOKIE_JAR" \
+ADD_RESP=$(curl -sfk -b "$COOKIE_JAR" \
     -X POST "${XUI_API}/xui/inbound/add" \
     -H "Content-Type: application/json" \
     -d "$INBOUND_JSON" 2>&1) || true
